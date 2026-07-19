@@ -37,6 +37,7 @@ jobs:
           bash -n tools/sdk
           python -m py_compile tools/check-dco
           python -m py_compile tools/update-credits
+          python -m py_compile tools/release-source
       - name: Check contributor credits
         run: ./tools/update-credits --check
       - name: Compile controller bridge with warnings as errors

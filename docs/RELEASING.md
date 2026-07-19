@@ -1,5 +1,8 @@
 # Release Process
 
+Development source milestones are built reproducibly with `./tools/release-source`.
+Their manifest explicitly identifies them as contributor source, not an end-user image.
+
 1. Freeze source dependencies and regenerate license, SBOM, provenance, and notices.
 2. Build twice in independent clean environments and compare intended artifacts.
 3. Run CI, candidate-image tests, migration tests, update fault injection, and rollback.

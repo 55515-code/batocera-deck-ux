@@ -5,6 +5,9 @@ It adds controller-first desktop, storage, migration, validation, recovery, and
 update experiences without distributing games, BIOS files, console firmware,
 keys, or other proprietary payloads.
 
+Current milestone: `0.1.0-dev.1`, a contributor source preview rather than an
+installable end-user OS image. See the [changelog](CHANGELOG.md).
+
 The project's priorities are [console-grade handheld UX, trusted peer distribution,
 and sustainable community stewardship](docs/PRODUCT_PRINCIPLES.md), in that order.
 
