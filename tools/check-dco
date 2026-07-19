@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+import re
+import subprocess
+import sys
+
+
+SIGNOFF = re.compile(r"^Signed-off-by:\s+.+\s+<[^<>@\s]+@[^<>\s]+>$", re.MULTILINE)
+
+
+def main():
+    revision = sys.argv[1] if len(sys.argv) > 1 else "HEAD"
+    result = subprocess.run(
+        ["git", "log", "--format=%H%x1f%B%x1e", revision],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    failures = []
+    for record in result.stdout.split("\x1e"):
+        record = record.strip()
+        if not record:
+            continue
+        commit, body = record.split("\x1f", 1)
+        if not SIGNOFF.search(body):
+            failures.append(commit)
+    if failures:
+        print("Commits missing a valid DCO sign-off:", file=sys.stderr)
+        for commit in failures:
+            print(f"  {commit}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

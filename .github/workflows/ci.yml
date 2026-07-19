@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check contribution sign-offs
+        if: github.event_name == 'pull_request'
+        run: ./tools/check-dco "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install native build dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libsdl2-dev
+      - name: Run migration and policy tests
+        run: python -m unittest discover -s tests -v
+      - name: Compile vendored BUA application
+        run: python -m py_compile third_party/bua/bua_installerx86.py
+      - name: Check shell syntax
+        run: |
+          find prototype -type f -name '*.sh' -print0 | xargs -0 -r -n1 bash -n
+          bash -n prototype/desktop/desktop
+          find prototype/services -type f -print0 | xargs -0 -r -n1 bash -n
+          bash -n product/package/batocera-deck-bua/files/bua
+          bash -n product/package/batocera-deck-bua/files/bua-port.sh
+          bash -n tools/sdk
+          python -m py_compile tools/check-dco
+      - name: Compile controller bridge with warnings as errors
+        run: |
+          cc -Wall -Wextra -Werror \
+            $(sdl2-config --cflags) \
+            prototype/desktop/plasma-gamepad-bridge.c \
+            $(sdl2-config --libs) \
+            -lm \
+            -o /tmp/plasma-gamepad-bridge

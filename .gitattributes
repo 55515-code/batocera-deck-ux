@@ -1,0 +1,3 @@
+third_party/bua/bua_installerx86.py whitespace=-trailing-space,-blank-at-eof linguist-vendored
+third_party/bua/icon.png binary linguist-vendored
+third_party/bua/LICENSE linguist-vendored

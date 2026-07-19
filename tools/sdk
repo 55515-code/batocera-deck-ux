@@ -1,0 +1,177 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+# shellcheck source=../sdk/versions.env
+source "$ROOT/sdk/versions.env"
+
+STATE_DIR=${SDK_STATE_DIR:-"$ROOT/.sdk"}
+BATOCERA_DIR=${BATOCERA_DIR:-"$STATE_DIR/batocera"}
+OUTPUT_DIR=${SDK_OUTPUT_DIR:-"$STATE_DIR/output/x86_64"}
+DOWNLOAD_DIR=${SDK_DOWNLOAD_DIR:-"$STATE_DIR/downloads"}
+CCACHE_DIR=${SDK_CCACHE_DIR:-"$STATE_DIR/ccache"}
+if [[ -n ${CONTAINER_RUNTIME:-} ]]; then
+    RUNTIME=$CONTAINER_RUNTIME
+elif command -v docker >/dev/null 2>&1; then
+    RUNTIME=docker
+else
+    RUNTIME=podman
+fi
+
+usage() {
+    cat <<'EOF'
+Usage: ./tools/sdk COMMAND [ARG]
+
+Commands: doctor bootstrap config config-local package NAME image shell test
+EOF
+}
+
+require_source() {
+    if [[ ! -d "$BATOCERA_DIR/.git" ]]; then
+        echo "Batocera source is absent. Run: ./tools/sdk bootstrap" >&2
+        exit 1
+    fi
+    if [[ ! -f "$BATOCERA_DIR/buildroot/Makefile" ]]; then
+        echo "Buildroot submodule is absent. Run: ./tools/sdk bootstrap" >&2
+        exit 1
+    fi
+}
+
+generate_defconfig() {
+    make -C "$BATOCERA_DIR" x86_64-defconfig
+}
+
+ensure_dirs() {
+    mkdir -p "$OUTPUT_DIR" "$DOWNLOAD_DIR" "$CCACHE_DIR"
+}
+
+ensure_image() {
+    if ! "$RUNTIME" image inspect "$BATOCERA_BUILD_IMAGE" >/dev/null 2>&1; then
+        "$RUNTIME" pull "$BATOCERA_BUILD_IMAGE"
+    fi
+}
+
+docker_make() {
+    ensure_dirs
+    ensure_image
+    "$RUNTIME" run -t --init --rm \
+        -v "$BATOCERA_DIR:/build:ro" \
+        -v "$ROOT:/deck-ux:ro" \
+        -v "$OUTPUT_DIR:/workspace" \
+        -v "$DOWNLOAD_DIR:/downloads" \
+        -v "$CCACHE_DIR:/home/batocera/.buildroot-ccache" \
+        -w /workspace \
+        -e "HOST_UID=$(id -u)" \
+        -e "HOST_GID=$(id -g)" \
+        "$BATOCERA_BUILD_IMAGE" \
+        make "${MAKE_ARGS[@]}" O=/workspace \
+            BR2_EXTERNAL=/build:/deck-ux \
+            BR2_DL_DIR=/downloads \
+            BR2_CCACHE_DIR=/home/batocera/.buildroot-ccache \
+            -C /build/buildroot "$@"
+}
+
+doctor() {
+    local failed=0 command
+    for command in git make; do
+        if command -v "$command" >/dev/null 2>&1; then
+            printf 'ok      %s\n' "$command"
+        else
+            printf 'missing %s\n' "$command"
+            failed=1
+        fi
+    done
+    if command -v "$RUNTIME" >/dev/null 2>&1; then
+        printf 'ok      OCI runtime %s\n' "$RUNTIME"
+    else
+        printf 'missing OCI runtime (Docker or Podman)\n'
+        failed=1
+    fi
+    printf 'source  %s\n' "$BATOCERA_DIR"
+    printf 'output  %s\n' "$OUTPUT_DIR"
+    df -h "$ROOT" | tail -n 1
+    if [[ -d "$BATOCERA_DIR/.git" ]]; then
+        local actual
+        actual=$(git -C "$BATOCERA_DIR" rev-parse HEAD)
+        if [[ "$actual" == "$BATOCERA_COMMIT" ]]; then
+            printf 'ok      Batocera %s\n' "$actual"
+        else
+            printf 'warning Batocera is %s; SDK pins %s\n' "$actual" "$BATOCERA_COMMIT"
+        fi
+        if [[ -n "$(git -C "$BATOCERA_DIR" status --porcelain)" ]]; then
+            echo "warning Batocera checkout has local changes"
+        fi
+    fi
+    return "$failed"
+}
+
+bootstrap() {
+    if [[ ! -d "$BATOCERA_DIR/.git" ]]; then
+        mkdir -p "$(dirname -- "$BATOCERA_DIR")"
+        git clone --filter=blob:none "$BATOCERA_REPOSITORY" "$BATOCERA_DIR"
+    fi
+    if [[ -n "$(git -C "$BATOCERA_DIR" status --porcelain)" ]]; then
+        echo "Refusing to change a dirty Batocera checkout: $BATOCERA_DIR" >&2
+        exit 1
+    fi
+    git -C "$BATOCERA_DIR" fetch origin "$BATOCERA_COMMIT"
+    git -C "$BATOCERA_DIR" checkout --detach "$BATOCERA_COMMIT"
+    git -C "$BATOCERA_DIR" submodule update --init --depth 1 buildroot
+}
+
+MAKE_ARGS=()
+if [[ ${SDK_JOBS:-} =~ ^[1-9][0-9]*$ ]]; then
+    MAKE_ARGS+=("-j${SDK_JOBS}")
+fi
+
+case ${1:-} in
+    doctor)
+        doctor
+        ;;
+    bootstrap)
+        bootstrap
+        ;;
+    config)
+        require_source
+        generate_defconfig
+        docker_make batocera-x86_64_defconfig
+        ;;
+    config-local)
+        require_source
+        generate_defconfig
+        ensure_dirs
+        make -C "$BATOCERA_DIR/buildroot" O="$OUTPUT_DIR" \
+            BR2_EXTERNAL="$BATOCERA_DIR:$ROOT" \
+            BR2_DEFCONFIG="$BATOCERA_DIR/configs/batocera-x86_64_defconfig" defconfig
+        ;;
+    package)
+        [[ $# -eq 2 ]] || { usage; exit 2; }
+        require_source
+        generate_defconfig
+        docker_make batocera-x86_64_defconfig
+        docker_make "$2"
+        ;;
+    image)
+        require_source
+        generate_defconfig
+        docker_make batocera-x86_64_defconfig
+        docker_make
+        ;;
+    shell)
+        require_source
+        ensure_dirs
+        ensure_image
+        exec "$RUNTIME" run -it --init --rm \
+            -v "$BATOCERA_DIR:/build:ro" -v "$ROOT:/deck-ux:ro" \
+            -v "$OUTPUT_DIR:/workspace" -v "$DOWNLOAD_DIR:/downloads" \
+            -v "$CCACHE_DIR:/home/batocera/.buildroot-ccache" \
+            -w /workspace "$BATOCERA_BUILD_IMAGE" bash
+        ;;
+    test)
+        exec "$ROOT/tools/ci-check"
+        ;;
+    *)
+        usage
+        exit 2
+        ;;
+esac

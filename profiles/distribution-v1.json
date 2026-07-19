@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "channels": ["stable", "candidate", "beta", "testing"],
+  "authorization": {
+    "authority": "tuf",
+    "hash_algorithms": ["sha256"],
+    "allow_transport_to_authorize": false,
+    "allow_downgrade_without_physical_confirmation": false
+  },
+  "transport": {
+    "preferred": "bittorrent-v2",
+    "fallbacks": ["https-webseed", "oci"],
+    "p2p_default": "off",
+    "seed_on_battery": false,
+    "seed_on_metered_network": false
+  },
+  "seeding": {
+    "cache_root": "/userdata/system/update-cache/objects",
+    "allow_roots": ["/userdata/system/update-cache/objects"],
+    "deny_roots": [
+      "/userdata/roms",
+      "/userdata/bios",
+      "/userdata/saves",
+      "/userdata/system/private-bundles",
+      "/userdata/system/configs",
+      "/userdata/system/ssh",
+      "/userdata/system/.ssh",
+      "/userdata/system/keys"
+    ]
+  },
+  "installation": {
+    "strategy": "inactive-ab-slot",
+    "verify_final_artifact_before_stage": true,
+    "require_health_commit": true,
+    "automatic_fallback": true
+  }
+}

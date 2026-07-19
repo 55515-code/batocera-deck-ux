@@ -1,0 +1,25 @@
+#!/bin/sh
+set -eu
+
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+
+python3 -m unittest discover -s tests -v
+python3 -m py_compile third_party/bua/bua_installerx86.py
+
+find prototype -type f -name '*.sh' -print0 | xargs -0 -r -n1 sh -n
+sh -n prototype/desktop/desktop
+sh -n product/package/batocera-deck-bua/files/bua
+sh -n product/package/batocera-deck-bua/files/bua-port.sh
+find prototype/services -type f -print0 | xargs -0 -r -n1 sh -n
+bash -n tools/sdk
+python3 -m py_compile tools/check-dco
+
+cc -Wall -Wextra -Werror \
+    $(sdl2-config --cflags) \
+    prototype/desktop/plasma-gamepad-bridge.c \
+    $(sdl2-config --libs) -lm \
+    -o /tmp/plasma-gamepad-bridge-ci
+
+git diff --check
+git diff --cached --check

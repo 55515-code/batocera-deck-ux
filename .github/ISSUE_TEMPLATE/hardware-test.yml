@@ -1,0 +1,29 @@
+name: Hardware test report
+description: Submit repeatable candidate-image results from a real device.
+title: "[Hardware]: "
+labels: [hardware-test]
+body:
+  - type: input
+    id: digest
+    attributes:
+      label: Candidate image digest
+    validations:
+      required: true
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware inventory
+      description: Deck model, BIOS, storage, dock, display, controller, and connection type.
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Test results
+      description: Include boot, suspend, desktop lifecycle, controller reconnect, dock, audio, update, and rollback.
+    validations:
+      required: true
+  - type: textarea
+    id: failures
+    attributes:
+      label: Failures and redacted evidence
