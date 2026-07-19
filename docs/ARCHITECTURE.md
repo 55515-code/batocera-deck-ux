@@ -37,6 +37,10 @@ mechanisms rather than layering a second operating-system updater over Batocera.
 - Recovery: restart UI, reset one emulator, reset desktop, user-data reset, factory reset.
 - Updates: stable/candidate channels, release notes, health gate, rollback action.
 
+The complete settings information architecture and privilege boundary are defined in
+[ADR 0005](adr/0005-unified-device-settings.md). The initial machine contract is
+[`profiles/settings-registry-v1.json`](../profiles/settings-registry-v1.json).
+
 Privileged operations run through a narrow host broker with a documented command
 schema. The UI never receives unrestricted sudo or host `/dev`, `/proc`, `/sys`,
 or `/run` access.

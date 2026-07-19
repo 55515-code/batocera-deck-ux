@@ -2,6 +2,8 @@
 
 Development source milestones are built reproducibly with `./tools/release-source`.
 Their manifest explicitly identifies them as contributor source, not an end-user image.
+Pushing a matching `v$(cat VERSION)` tag creates a draft source release; a maintainer must
+inspect and publish it. See [Maintainer Setup](MAINTAINER_SETUP.md).
 
 1. Freeze source dependencies and regenerate license, SBOM, provenance, and notices.
 2. Build twice in independent clean environments and compare intended artifacts.

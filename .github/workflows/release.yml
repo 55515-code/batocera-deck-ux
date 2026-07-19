@@ -1,0 +1,39 @@
+name: Draft source release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  source-release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - name: Require a matching version tag
+        run: test "${GITHUB_REF_NAME}" = "v$(cat VERSION)"
+      - name: Install native build dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libsdl2-dev
+      - name: Run the complete validation gate
+        run: ./tools/ci-check
+      - name: Build reproducible contributor source archive
+        run: ./tools/release-source
+      - name: Create human-gated draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --verify-tag \
+            --draft \
+            --generate-notes \
+            --title "Batocera Deck UX ${GITHUB_REF_NAME}" \
+            dist/*
