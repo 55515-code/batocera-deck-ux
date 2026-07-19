@@ -25,6 +25,10 @@ Architecture and current status are documented in [Product Architecture](docs/AR
 [Secure Distribution](docs/DISTRIBUTION.md), [Roadmap](docs/ROADMAP.md), and
 [Live Prototype State](docs/LIVE_PROTOTYPE.md).
 
+The planned unified graphical settings experience extends Batocera's existing controller
+control center through a typed, least-privilege provider API. Its navigation and safety
+contract are documented in [ADR 0005](docs/adr/0005-unified-device-settings.md).
+
 The enforceable distribution defaults live in
 [`profiles/distribution-v1.json`](profiles/distribution-v1.json). They keep release
 authorization separate from P2P transport and confine seeding to a dedicated cache.

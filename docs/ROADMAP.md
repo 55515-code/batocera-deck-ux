@@ -59,3 +59,26 @@ recovery, input, display, storage, and desktop reliability.
 - No public index, stranger discovery, public-update cache reuse, or anonymity promise.
 - Per-system and collection sharing derived from Batocera system definitions, with staged
   hash verification, conflict preview, atomic library import, and declarative safe presets.
+
+## Stretch: Android application compatibility
+
+- Run a Waydroid feasibility spike on the product Wayland session, reusing its upstream LXC,
+  namespace, Binder, x86_64, AMD Mesa, full-screen, and application-integration design.
+- Package a pinned AOSP/LineageOS-compatible runtime through Buildroot integration rather than
+  installing a mutable second distribution or downloading executable setup scripts at runtime.
+- Add controller-first Android app discovery and launch entries, per-app control profiles,
+  touch mapping, OSK, audio, rotation, suspend/resume, and clean return to Gaming Mode.
+- Keep Android application data in a bounded user-data subvolume with graphical storage,
+  permission, backup, reset, runtime repair, and complete removal controls.
+- Qualify native x86/x86_64 apps first. Treat ARM translation, DRM, integrity attestation,
+  anti-cheat, camera, telephony, and location-dependent software as unsupported until proven.
+- Ship a functional FOSS/AOSP path without proprietary Google components. Investigate Android
+  CDD/CTS qualification and Google Mobile Services licensing as the only product path for a
+  preinstalled Play Store; do not redistribute Play Store or GMS outside applicable licenses.
+- If licensing is unavailable, permit a clearly unsupported expert workflow for user-provided
+  compatible images without project hosting, extraction, or circumvention of proprietary files.
+
+This goal remains behind image reproducibility, recovery, input/display reliability, and the
+security model. Waydroid's [official architecture](https://waydro.id/) confirms the relevant
+Wayland/container approach; Google's [Android compatibility program](https://source.android.com/docs/compatibility/overview)
+defines compatibility and GMS licensing as separate gates.

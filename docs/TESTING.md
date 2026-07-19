@@ -21,3 +21,14 @@
 Attach a hardware report to candidate pull requests. Record Deck model, BIOS, image digest,
 dock/controller models, display mode, exact test cases, results, logs, and screenshots.
 Passing one developer Deck is prototype evidence, not product qualification.
+
+## Android compatibility stretch gate
+
+- Verify kernel Binder support, container isolation, GPU acceleration, audio, network, input,
+  touch, OSK, screen rotation, clipboard policy, and full-screen Wayland presentation.
+- Test launch/exit, controller hotplug, dock/undock, suspend/resume, low storage, runtime reset,
+  app-data backup/restore, and removal without affecting Batocera or Plasma sessions.
+- Maintain an app matrix separating x86-native, translated ARM, DRM/attestation-dependent, and
+  unsupported hardware-dependent applications; passing a storefront launch is not sufficient.
+- Never place GMS or Play Store artifacts in project CI, caches, source releases, or images
+  unless a documented redistribution license and release approval explicitly cover them.
