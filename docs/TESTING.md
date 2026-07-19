@@ -17,6 +17,9 @@
   daemon; fail the image if NetworkManager or a container network daemon is active.
 - Install and launch a real Flatpak GUI application as UID 1000. Portals or package
   installation alone do not pass; verify user namespaces and Bubblewrap sandbox creation.
+- Validate the LuigiOS brand manifest and artwork provenance. Check boot, ES, Plasma,
+  settings, recovery, and Steam handoff at 1280x800 and 1920x1080; verify fallback
+  artwork, text legibility, icon recognition, and a transactional demo rollback.
 - Built-in controls plus DualSense connect, reconnect, cursor, clicks, OSK, and exit chord.
 - Handheld 1280x800 plus HDMI dock/undock, TV overscan, audio route, and controller order.
 - Representative emulator launches, save/load/state, hotkeys, and return to ES.

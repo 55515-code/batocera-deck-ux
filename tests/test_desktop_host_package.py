@@ -105,6 +105,14 @@ class DesktopHostPackageTests(unittest.TestCase):
             self.assertNotIn(broad_mount, mounts)
         self.assertNotIn("NOPASSWD", package_text)
         self.assertNotIn("sudoers", package_text)
+        self.assertIn(
+            'bind_dir /userdata/system/configs/luigios "$rootfs/run/luigios-branding" ro',
+            mounts,
+        )
+        self.assertNotIn(
+            'bind_dir /userdata/system/configs "$rootfs/run/luigios-branding"',
+            mounts,
+        )
 
     def test_shell_files_parse(self):
         scripts = [

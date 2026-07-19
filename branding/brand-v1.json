@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "product": {
+    "display_name": "LuigiOS",
+    "id": "luigios",
+    "variant": "Steam Deck Developer Preview"
+  },
+  "principles": {
+    "context_transition_ms": 300,
+    "fallback_icon": "assets/core/luigios-symbolic.svg",
+    "handheld_reference": "1280x800",
+    "tv_reference": "1920x1080"
+  },
+  "slots": [
+    {
+      "id": "core.logo",
+      "kind": "file",
+      "source": "assets/core/luigios-logo.svg",
+      "required_for_demo": true,
+      "surfaces": ["about", "settings", "recovery"],
+      "deploy": [
+        {"scope": "demo", "destination": "/userdata/system/add-ons/luigios/branding/icons/luigios-logo.svg"},
+        {"scope": "image", "destination": "/usr/share/luigios/branding/icons/luigios-logo.svg"}
+      ]
+    },
+    {
+      "id": "core.symbolic",
+      "kind": "file",
+      "source": "assets/core/luigios-symbolic.svg",
+      "required_for_demo": true,
+      "surfaces": ["panel", "menus", "notifications", "fallback"],
+      "deploy": [
+        {"scope": "demo", "destination": "/userdata/system/add-ons/luigios/branding/icons/luigios-symbolic.svg"},
+        {"scope": "image", "destination": "/usr/share/luigios/branding/icons/luigios-symbolic.svg"}
+      ]
+    },
+    {
+      "id": "boot.logo.handheld",
+      "kind": "file",
+      "source": "assets/boot/boot-logo-1280x800.png",
+      "required_for_demo": false,
+      "constraints": {"width": 1280, "height": 800},
+      "surfaces": ["early-boot-handheld"],
+      "deploy": [
+        {"scope": "image", "destination": "/usr/share/batocera/splash/boot-logo.png"}
+      ]
+    },
+    {
+      "id": "boot.logo.4x3",
+      "kind": "file",
+      "source": "assets/boot/boot-logo-4x3.png",
+      "required_for_demo": false,
+      "surfaces": ["early-boot-fallback"],
+      "deploy": [
+        {"scope": "image", "destination": "/usr/share/batocera/splash/boot-logo-4x3.png"}
+      ]
+    },
+    {
+      "id": "boot.splash",
+      "kind": "file",
+      "source": "assets/boot/luigios-splash.mp4",
+      "required_for_demo": true,
+      "surfaces": ["boot-transition"],
+      "deploy": [
+        {"scope": "demo", "destination": "/userdata/splash/luigios-splash.mp4"},
+        {"scope": "image", "destination": "/usr/share/luigios/branding/splash/luigios-splash.mp4"}
+      ]
+    },
+    {
+      "id": "game-mode.theme",
+      "kind": "directory",
+      "source": "assets/game-mode/theme",
+      "required_for_demo": true,
+      "surfaces": ["emulationstation", "collections", "system-view", "game-view"],
+      "deploy": [
+        {"scope": "demo", "destination": "/userdata/themes/luigios"},
+        {"scope": "image", "destination": "/usr/share/emulationstation/themes/luigios"}
+      ]
+    },
+    {
+      "id": "desktop.look-and-feel",
+      "kind": "directory",
+      "source": "assets/desktop/look-and-feel/org.luigios.desktop",
+      "required_for_demo": true,
+      "surfaces": ["plasma-shell", "launcher", "logout", "lock-screen"],
+      "deploy": [
+        {"scope": "demo", "destination": "${PLASMA_HOME}/.local/share/plasma/look-and-feel/org.luigios.desktop"},
+        {"scope": "image", "destination": "/usr/share/plasma/look-and-feel/org.luigios.desktop"}
+      ]
+    },
+    {
+      "id": "desktop.theme",
+      "kind": "directory",
+      "source": "assets/desktop/desktoptheme/luigios",
+      "required_for_demo": true,
+      "surfaces": ["panel", "widgets", "dialogs"],
+      "deploy": [
+        {"scope": "demo", "destination": "${PLASMA_HOME}/.local/share/plasma/desktoptheme/luigios"},
+        {"scope": "image", "destination": "/usr/share/plasma/desktoptheme/luigios"}
+      ]
+    },
+    {
+      "id": "desktop.icons",
+      "kind": "directory",
+      "source": "assets/desktop/icons/luigios",
+      "required_for_demo": true,
+      "surfaces": ["applications", "settings", "system-tray", "file-manager"],
+      "deploy": [
+        {"scope": "demo", "destination": "${PLASMA_HOME}/.local/share/icons/luigios"},
+        {"scope": "image", "destination": "/usr/share/icons/luigios"}
+      ]
+    },
+    {
+      "id": "desktop.cursors",
+      "kind": "directory",
+      "source": "assets/desktop/icons/luigios-cursors",
+      "required_for_demo": false,
+      "surfaces": ["pointer", "busy-state", "drag-drop"],
+      "deploy": [
+        {"scope": "demo", "destination": "${PLASMA_HOME}/.local/share/icons/luigios-cursors"},
+        {"scope": "image", "destination": "/usr/share/icons/luigios-cursors"}
+      ]
+    },
+    {
+      "id": "desktop.wallpaper.handheld",
+      "kind": "file",
+      "source": "assets/desktop/wallpapers/luigios/contents/images/1280x800.png",
+      "required_for_demo": true,
+      "constraints": {"width": 1280, "height": 800},
+      "surfaces": ["desktop-handheld"],
+      "deploy": [
+        {"scope": "demo", "destination": "${PLASMA_HOME}/.local/share/wallpapers/luigios/contents/images/1280x800.png"},
+        {"scope": "image", "destination": "/usr/share/wallpapers/luigios/contents/images/1280x800.png"}
+      ]
+    },
+    {
+      "id": "desktop.wallpaper.tv",
+      "kind": "file",
+      "source": "assets/desktop/wallpapers/luigios/contents/images/1920x1080.png",
+      "required_for_demo": true,
+      "constraints": {"width": 1920, "height": 1080},
+      "surfaces": ["desktop-tv"],
+      "deploy": [
+        {"scope": "demo", "destination": "${PLASMA_HOME}/.local/share/wallpapers/luigios/contents/images/1920x1080.png"},
+        {"scope": "image", "destination": "/usr/share/wallpapers/luigios/contents/images/1920x1080.png"}
+      ]
+    },
+    {
+      "id": "system.settings-icons",
+      "kind": "directory",
+      "source": "assets/system/settings-icons",
+      "required_for_demo": true,
+      "surfaces": ["settings", "storage", "network", "controllers", "updates"],
+      "deploy": [
+        {"scope": "demo", "destination": "/userdata/system/add-ons/luigios/branding/settings-icons"},
+        {"scope": "image", "destination": "/usr/share/luigios/branding/settings-icons"}
+      ]
+    },
+    {
+      "id": "system.recovery",
+      "kind": "directory",
+      "source": "assets/system/recovery",
+      "required_for_demo": true,
+      "surfaces": ["recovery", "rollback", "factory-reset"],
+      "deploy": [
+        {"scope": "demo", "destination": "/userdata/system/add-ons/luigios/branding/recovery"},
+        {"scope": "image", "destination": "/usr/share/luigios/branding/recovery"}
+      ]
+    },
+    {
+      "id": "steam.presentation",
+      "kind": "directory",
+      "source": "assets/steam/grid",
+      "required_for_demo": false,
+      "surfaces": ["steam-shortcuts", "game-mode-handoff"],
+      "deploy": [
+        {"scope": "demo", "destination": "/userdata/system/add-ons/luigios/branding/steam-grid"},
+        {"scope": "image", "destination": "/usr/share/luigios/branding/steam-grid"}
+      ]
+    },
+    {
+      "id": "audio.cues",
+      "kind": "directory",
+      "source": "assets/audio",
+      "required_for_demo": false,
+      "surfaces": ["startup", "confirm", "back", "error", "notification"],
+      "deploy": [
+        {"scope": "demo", "destination": "/userdata/system/add-ons/luigios/branding/audio"},
+        {"scope": "image", "destination": "/usr/share/luigios/branding/audio"}
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Network Connections
-Comment=Manage Batocera networking through ConnMan
+Comment=Manage LuigiOS networking through ConnMan
 Exec=/usr/bin/cmst --minimized
 Icon=network-wireless
 OnlyShowIn=KDE;

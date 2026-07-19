@@ -37,6 +37,7 @@ DEFAULT_APPROVED_BATOCERA = (
     "batocera-config.desktop",
     "batocera-file-manager.desktop",
     "batocera-settings.desktop",
+    "return-to-luigios.desktop",
     "return-to-batocera.desktop",
     "steam-big-picture.desktop",
 )

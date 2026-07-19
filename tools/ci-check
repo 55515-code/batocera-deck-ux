@@ -16,6 +16,7 @@ bash -n tools/sdk
 python3 -m py_compile tools/check-dco
 python3 -m py_compile tools/update-credits
 python3 -m py_compile tools/release-source
+python3 -m py_compile tools/brandctl
 ./tools/update-credits --check
 
 cc -Wall -Wextra -Werror \

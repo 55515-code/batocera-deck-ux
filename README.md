@@ -25,6 +25,11 @@ Architecture and current status are documented in [Product Architecture](docs/AR
 [Secure Distribution](docs/DISTRIBUTION.md), [Roadmap](docs/ROADMAP.md), and
 [Live Prototype State](docs/LIVE_PROTOTYPE.md).
 
+The versioned [LuigiOS brand system](branding/README.md) coordinates boot, Game Mode,
+Plasma, settings, recovery, Steam handoff, icons, wallpapers, motion, and audio cues.
+`./tools/brandctl validate --require-ready` is the asset-readiness gate; demo deployment
+is transactional and keeps a complete backup under `/userdata/system/backups`.
+
 The planned unified graphical settings experience extends Batocera's existing controller
 control center through a typed, least-privilege provider API. Its navigation and safety
 contract are documented in [ADR 0005](docs/adr/0005-unified-device-settings.md).

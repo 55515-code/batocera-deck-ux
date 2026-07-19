@@ -61,3 +61,16 @@ stream, confirm only that stream is muted, play a desktop sound, enumerate ConnM
 UID 1000, return through the desktop shortcut, confirm ES audio is restored, and launch Plasma
 again. Flatpak acceptance additionally requires launching an installed graphical application;
 a successful Discovery installation alone is not a pass.
+
+## LuigiOS branding
+
+The demo has a persistent LuigiOS identity and brand manifest under
+`/userdata/system/configs/luigios`, hostname setting `LUIGIOS`, a canonical
+`Return to LuigiOS Game Mode` desktop launcher, and an empty transactional asset
+staging root at `/userdata/system/add-ons/luigios/branding/assets`. The previous
+Batocera configuration was backed up before changing identity.
+
+No incomplete visual theme is active. Boot, ES, Plasma, settings, recovery,
+Steam presentation, and audio assets must pass `brandctl validate --require-ready`
+before transactional deployment. The first visual activation was also deferred
+because the live Deck remained at 2% while charging.

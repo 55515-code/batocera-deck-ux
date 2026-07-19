@@ -42,6 +42,7 @@ stop_mounts() {
     done
     unmount_path "$rootfs/mnt/roms"
     unmount_path "$rootfs/run/batocera-deck-desktop/audio"
+    unmount_path "$rootfs/run/luigios-branding"
     unmount_path "$rootfs/run/dbus/system_bus_socket"
     unmount_path "$rootfs/run/wayland-0"
     unmount_path "$rootfs/dev/shm"
@@ -77,6 +78,7 @@ bind_file /run/wayland-0 "$rootfs/run/wayland-0"
 bind_file /run/dbus/system_bus_socket "$rootfs/run/dbus/system_bus_socket"
 bind_dir /run/batocera-deck-desktop/audio \
     "$rootfs/run/batocera-deck-desktop/audio"
+bind_dir /userdata/system/configs/luigios "$rootfs/run/luigios-branding" ro
 bind_dir /userdata/roms "$rootfs/mnt/roms"
 for name in bios saves screenshots themes music; do
     bind_dir "/userdata/$name" "$rootfs/mnt/batocera/$name"

@@ -275,6 +275,8 @@ setsid chroot "$rootfs" /usr/bin/setpriv \
     XDG_CURRENT_DESKTOP=KDE KDE_FULL_SESSION=true XDG_MENU_PREFIX=plasma- \
     XDG_CONFIG_DIRS=/etc/xdg \
     XDG_DATA_DIRS=/home/deck/.local/share/flatpak/exports/share:/usr/local/share:/usr/share \
+    LUIGIOS_SESSION=desktop \
+    LUIGIOS_BRAND_MANIFEST=/mnt/batocera/system-configs/luigios/brand-v1.json \
     WAYLAND_DISPLAY=/run/wayland-0 QT_QPA_PLATFORM=wayland \
     PULSE_SERVER=unix:/run/arch-plasma-audio/native \
     PULSE_RUNTIME_PATH=/run/arch-plasma-audio \

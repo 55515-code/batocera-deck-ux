@@ -89,6 +89,8 @@ setsid chroot "$rootfs" /usr/bin/setpriv \
     XDG_SESSION_DESKTOP=KDE XDG_CURRENT_DESKTOP=KDE KDE_FULL_SESSION=true \
     XDG_CONFIG_DIRS=/etc/xdg \
     XDG_DATA_DIRS=/home/deck/.local/share/flatpak/exports/share:/usr/local/share:/usr/share \
+    LUIGIOS_SESSION=desktop \
+    LUIGIOS_BRAND_MANIFEST=/run/luigios-branding/brand-v1.json \
     DBUS_SYSTEM_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket \
     WAYLAND_DISPLAY=/run/wayland-0 QT_QPA_PLATFORM=wayland \
     PULSE_SERVER=unix:/run/batocera-deck-desktop/audio/native \
