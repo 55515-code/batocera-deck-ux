@@ -50,3 +50,12 @@ recovery, input, display, storage, and desktop reliability.
   factory reset, and rollback qualification.
 - Secure Boot/measured-boot decision, threat model review, penetration test, support
   policy, warranty/recovery documentation, release signing runbook, and legal review.
+
+## Later: Trusted Vaults
+
+- Controller-first mutual pairing and non-transitive per-vault grants using Syncthing.
+- Storage-only encrypted backups, recovery ceremony, revocation, and restore drills.
+- Static/private addressing first; evaluate I2P SAM only after isolated transport tests.
+- No public index, stranger discovery, public-update cache reuse, or anonymity promise.
+- Per-system and collection sharing derived from Batocera system definitions, with staged
+  hash verification, conflict preview, atomic library import, and declarative safe presets.

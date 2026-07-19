@@ -33,6 +33,7 @@ mechanisms rather than layering a second operating-system updater over Batocera.
 - Storage: initialize/adopt/eject media, library placement, capacity and health.
 - Backup and Restore: category selection, verification, conflict preview, rollback.
 - Restore Points: optional Btrfs snapshots, retention, file recovery, and offline restore.
+- Trusted Vaults: explicit peer pairing, private backup, readable grants, and revocation.
 - Recovery: restart UI, reset one emulator, reset desktop, user-data reset, factory reset.
 - Updates: stable/candidate channels, release notes, health gate, rollback action.
 

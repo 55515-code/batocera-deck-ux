@@ -32,6 +32,10 @@ and contribute to Batocera's existing swarms whenever the complete artifact is i
 Changed derivative images use distinct identities, while shared public objects are reused
 by digest and recognized vanilla torrent state survives migration.
 
+Private user data never shares the public updater's process or object cache. The proposed
+[Trusted Vaults](adr/0004-trusted-vaults.md) design reuses Syncthing and encrypted backup
+repositories for mutual, explicit relationships without a public catalog or anonymity claim.
+
 ## Trust and channels
 
 - Embed the first TUF root in the factory image.
