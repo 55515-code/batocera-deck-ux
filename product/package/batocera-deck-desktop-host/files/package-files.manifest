@@ -5,7 +5,7 @@
 /usr/libexec/batocera-deck-desktop/arch-plasma-session
 /usr/libexec/batocera-deck-desktop/desktop-controller
 /usr/libexec/batocera-deck-desktop/plasma-gamepad-bridge
-/usr/share/batocera-deck-ux/manifests/desktop-host.files
+/usr/share/luigios/manifests/desktop-host.files
 /usr/share/batocera/datainit/roms/ports/Desktop Mode.sh
 /usr/share/batocera/services/deck_desktop_host
 /usr/share/pipewire/pipewire-pulse.conf.d/90-deck-desktop-pulse.conf

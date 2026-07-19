@@ -24,7 +24,7 @@ class BuaIntegrationTests(unittest.TestCase):
         launcher = (
             ROOT / "product/package/batocera-deck-bua/files/bua"
         ).read_text(encoding="utf-8")
-        self.assertIn("/usr/share/batocera-deck-ux/bua/bua_installerx86.py", launcher)
+        self.assertIn("/usr/share/luigios/bua/bua_installerx86.py", launcher)
         self.assertIn(self.upstream["files"]["bua_installerx86.py"].split(":", 1)[1], launcher)
         self.assertNotIn("curl", launcher)
         self.assertNotIn("refs/heads", launcher)

@@ -35,5 +35,5 @@ jobs:
             --verify-tag \
             --draft \
             --generate-notes \
-            --title "Batocera Deck UX ${GITHUB_REF_NAME}" \
+            --title "LuigiOS ${GITHUB_REF_NAME}" \
             dist/*

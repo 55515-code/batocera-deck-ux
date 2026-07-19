@@ -1,4 +1,4 @@
-# Batocera Deck UX SDK
+# LuigiOS SDK
 
 The SDK is a thin orchestration layer around the upstream Batocera Buildroot tree and
 official Batocera build container through Docker or Podman. It does not maintain a compiler, sysroot, package

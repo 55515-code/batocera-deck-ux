@@ -40,7 +40,7 @@ define BATOCERA_DECK_DESKTOP_HOST_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/files/desktop-mode-port.sh \
 		"$(TARGET_DIR)/usr/share/batocera/datainit/roms/ports/Desktop Mode.sh"
 	$(INSTALL) -D -m 0644 $(@D)/files/package-files.manifest \
-		$(TARGET_DIR)/usr/share/batocera-deck-ux/manifests/desktop-host.files
+		$(TARGET_DIR)/usr/share/luigios/manifests/desktop-host.files
 endef
 
 $(eval $(generic-package))

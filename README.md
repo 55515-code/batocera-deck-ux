@@ -1,6 +1,6 @@
-# Batocera Deck UX
+# LuigiOS
 
-Batocera Deck UX is an early Steam Deck-focused Batocera derivative project.
+LuigiOS is an early Steam Deck-focused Batocera derivative project.
 It adds controller-first desktop, storage, migration, validation, recovery, and
 update experiences without distributing games, BIOS files, console firmware,
 keys, or other proprietary payloads.

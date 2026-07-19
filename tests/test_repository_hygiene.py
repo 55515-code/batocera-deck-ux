@@ -42,6 +42,20 @@ class RepositoryHygieneTests(unittest.TestCase):
                 offenders.append(str(relative))
         self.assertEqual(offenders, [])
 
+    def test_public_brand_is_luigios(self):
+        public_files = (
+            "README.md",
+            "Config.in",
+            "external.desc",
+            "sdk/README.md",
+            ".github/workflows/release.yml",
+        )
+        text = "\n".join((ROOT / path).read_text() for path in public_files)
+
+        self.assertIn("LuigiOS", text)
+        self.assertNotIn("Batocera Deck UX", text)
+        self.assertNotIn("BATOCERA_DECK_UX", text)
+
 
 if __name__ == "__main__":
     unittest.main()
