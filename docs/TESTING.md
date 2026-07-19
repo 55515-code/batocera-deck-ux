@@ -11,6 +11,12 @@
 
 - Clean image boot and first-boot storage initialization.
 - Gaming Mode, Plasma launch/return, forced-session recovery, suspend/resume, and reboot.
+- Desktop audio must play through the host PipeWire graph while only the surviving ES
+  stream is muted; return must restore its pre-session state even if PipeWire reindexes it.
+- Plasma networking must enumerate and change connections through the sole host ConnMan
+  daemon; fail the image if NetworkManager or a container network daemon is active.
+- Install and launch a real Flatpak GUI application as UID 1000. Portals or package
+  installation alone do not pass; verify user namespaces and Bubblewrap sandbox creation.
 - Built-in controls plus DualSense connect, reconnect, cursor, clicks, OSK, and exit chord.
 - Handheld 1280x800 plus HDMI dock/undock, TV overscan, audio route, and controller order.
 - Representative emulator launches, save/load/state, hotkeys, and return to ES.

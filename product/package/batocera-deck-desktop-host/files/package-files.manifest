@@ -1,0 +1,11 @@
+/etc/dbus-1/system.d/deck-desktop-connman.conf
+/etc/init.d/S05deck-desktop-runtime
+/usr/bin/batocera-deck-desktop
+/usr/libexec/batocera-deck-desktop/arch-plasma-mounts
+/usr/libexec/batocera-deck-desktop/arch-plasma-session
+/usr/libexec/batocera-deck-desktop/desktop-controller
+/usr/libexec/batocera-deck-desktop/plasma-gamepad-bridge
+/usr/share/batocera-deck-ux/manifests/desktop-host.files
+/usr/share/batocera/datainit/roms/ports/Desktop Mode.sh
+/usr/share/batocera/services/deck_desktop_host
+/usr/share/pipewire/pipewire-pulse.conf.d/90-deck-desktop-pulse.conf

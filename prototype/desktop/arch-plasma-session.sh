@@ -9,10 +9,91 @@ sync_apps=/userdata/system/add-ons/desktop/helpers/sync-plasma-apps.py
 command_file=/userdata/system/add-ons/desktop/helpers/plasma-command
 pidfile=/tmp/arch-plasma-session.pid
 log="$container/logs/session.log"
+es_audio_state=/tmp/arch-plasma-es-audio.state
 wayland_socket=/run/wayland-0
 runtime_dir=/run/arch-plasma-runtime-1000
 runtime_mount="$rootfs$runtime_dir/doc"
 nested_wrapper="$rootfs/usr/local/bin/kwin_wayland_wrapper"
+
+restore_es_audio() {
+    [ -s "$es_audio_state" ] || return 0
+    current=$(mktemp /tmp/arch-plasma-es-audio.current.XXXXXX) || return 0
+    if ! list_es_audio_streams >"$current"; then
+        rm -f "$current"
+        return 0
+    fi
+
+    while IFS="$(printf '\t')" read -r input logical instance _; do
+        case "$input" in ''|*[!0-9]*) continue ;; esac
+        [ -n "$logical" ] && [ -n "$instance" ] || continue
+        muted=$(awk -F '\t' -v logical="$logical" \
+            '$1 == logical { print $3; exit }' "$es_audio_state")
+        case "$muted" in yes|no) ;; *) continue ;; esac
+        # Relist immediately before changing the stream. Pulse indexes can be
+        # reused after a client exits, so the logical key alone is never
+        # sufficient proof that this is still the listed stream instance.
+        [ "$(es_audio_instance_for_index "$input")" = "$instance" ] || continue
+        case "$muted" in
+            yes) pactl set-sink-input-mute "$input" 1 2>/dev/null || true ;;
+            no) pactl set-sink-input-mute "$input" 0 2>/dev/null || true ;;
+        esac
+    done <"$current"
+    rm -f "$current"
+    rm -f "$es_audio_state"
+}
+
+list_es_audio_streams() {
+    command -v jq >/dev/null 2>&1 || return 1
+    audio_json=$(pactl -f json list sink-inputs 2>/dev/null) || return 1
+    printf '%s\n' "$audio_json" | jq -r '
+        .[] | select(
+            .properties["application.process.binary"] == "emulationstation" or
+            ((.properties["application.name"] // "") | ascii_downcase | contains("emulationstation")) or
+            ((.properties["node.name"] // "") | ascii_downcase | contains("emulationstation"))
+        ) |
+        [
+            .properties["application.process.binary"] // "",
+            .properties["application.name"] // "",
+            .properties["media.name"] // "",
+            .properties["media.role"] // "",
+            .properties["node.name"] // ""
+        ] as $logical |
+        ([.properties["object.serial"] // "",
+          .properties["application.process.id"] // ""] + $logical) as $instance |
+        [.index, ($logical | tojson | @base64),
+         ($instance | tojson | @base64),
+         (if .mute then "yes" else "no" end)] | @tsv
+    '
+}
+
+es_audio_instance_for_index() {
+    wanted=$1
+    list_es_audio_streams | awk -F '\t' -v wanted="$wanted" \
+        '$1 == wanted { print $3; exit }'
+}
+
+mute_es_audio() {
+    current=$(mktemp /tmp/arch-plasma-es-audio.mute.XXXXXX) || return 0
+    if ! list_es_audio_streams >"$current"; then
+        rm -f "$current"
+        return 0
+    fi
+    while IFS="$(printf '\t')" read -r input logical instance muted; do
+        case "$input" in ''|*[!0-9]*) continue ;; esac
+        [ -n "$logical" ] && [ -n "$instance" ] || continue
+        case "$muted" in yes|no) ;; *) continue ;; esac
+        if ! awk -F '\t' -v logical="$logical" \
+            '$1 == logical { found=1 } END { exit !found }' \
+            "$es_audio_state" 2>/dev/null; then
+            printf '%s\t%s\t%s\n' "$logical" "$instance" "$muted" >>"$es_audio_state"
+        fi
+        [ "$(es_audio_instance_for_index "$input")" = "$instance" ] || continue
+        pactl set-sink-input-mute "$input" 1 2>/dev/null || true
+    done <"$current"
+    rm -f "$current"
+}
+
+# State is deliberately per logical stream; there is no shared "baseline:" value.
 
 is_container_process() {
     pid=${1:-0}
@@ -34,6 +115,7 @@ stop_session() {
         fi
     fi
     "$controller" stop >/dev/null 2>&1 || true
+    restore_es_audio
     rm -f "$pidfile"
     setfacl -x u:1000 "$wayland_socket" 2>/dev/null || true
     if findmnt -rn -o TARGET "$runtime_mount" 2>/dev/null | grep -Fxq "$runtime_mount"; then
@@ -78,6 +160,7 @@ cleanup() {
     trap - EXIT INT TERM HUP
 
     "$controller" stop >/dev/null 2>&1 || true
+    restore_es_audio
     if [ -n "$session_pid" ] && is_container_process "$session_pid"; then
         kill -TERM -- "-$session_pid" 2>/dev/null || true
         for _ in $(seq 1 20); do
@@ -99,6 +182,12 @@ cleanup() {
     "$mounts" stop >/dev/null 2>&1 || true
 }
 trap cleanup EXIT INT TERM HUP
+
+# Do not mute ES until cleanup is armed; failed container setup must never
+# leave the console frontend silent.
+restore_es_audio
+: >"$es_audio_state"
+mute_es_audio
 
 # Plasma runs unprivileged while Labwc remains the sole display owner.  Give
 # only UID 1000 temporary access to the parent socket; never change its owner.
@@ -187,7 +276,9 @@ setsid chroot "$rootfs" /usr/bin/setpriv \
     XDG_CONFIG_DIRS=/etc/xdg \
     XDG_DATA_DIRS=/home/deck/.local/share/flatpak/exports/share:/usr/local/share:/usr/share \
     WAYLAND_DISPLAY=/run/wayland-0 QT_QPA_PLATFORM=wayland \
-    PULSE_SERVER=unix:/run/pulse/native PIPEWIRE_RUNTIME_DIR=/run \
+    PULSE_SERVER=unix:/run/arch-plasma-audio/native \
+    PULSE_RUNTIME_PATH=/run/arch-plasma-audio \
+    PIPEWIRE_RUNTIME_DIR=/run \
     /usr/bin/dbus-run-session -- /usr/bin/plasma_session \
     >>"$log" 2>&1 &
 session_pid=$!
@@ -213,7 +304,13 @@ fi
     exit 1
 }
 
+audio_poll=0
 while plasma_compositor_alive && kill -0 "$session_pid" 2>/dev/null; do
+    audio_poll=$((audio_poll + 1))
+    if [ "$audio_poll" -ge 20 ]; then
+        mute_es_audio
+        audio_poll=0
+    fi
     if [ -s "$command_file" ]; then
         IFS= read -r command <"$command_file"
         : >"$command_file"

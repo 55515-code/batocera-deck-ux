@@ -8,7 +8,8 @@ This is a prototype on an unreleased channel, not a production image.
 - Internal SHARE and SD ROM/Steam library mounts persist after reboot.
 - Plasma launches fullscreen at 1280x800 as a foreground Batocera Ports transaction.
 - Plasma runs as UID 1000 `deck`; KDE apps, menu, Discover/Flathub, and persistent
-  home are present.
+  home are present. Flatpak installation works, but application launch is blocked
+  by the current Batocera kernel as described below.
 - Steam Deck controller bridge starts only during Desktop Mode and supports dynamic
   SDL game-controller discovery, per-controller state, pointer, clicks, keys, and OSK.
 - Normal desktop return and forced wrapper death leave no KWin, Plasma, bridge,
@@ -32,3 +33,31 @@ This is a prototype on an unreleased channel, not a production image.
   content is unaffected, but encrypted Wii U content requires the owner's valid file.
 - CoCo/Dragon/MC-10, GP32, and Super A'Can BIOS families remain absent.
 - The build, desktop rootfs, and update path are not yet reproducible or signed.
+- Flatpak applications cannot launch because the running image's user-namespace
+  policy rejects Bubblewrap, although the currently pinned x86 Batocera defconfig
+  enables `CONFIG_USER_NS`. Do not make Bubblewrap setuid or globally weaken the
+  policy as a workaround. Candidate images must prove namespace and Bubblewrap
+  operation before advertising Flatpak support; Discovery should show an
+  actionable unsupported state until then.
+
+## Desktop host integration
+
+The prototype keeps Batocera as the sole owner of PipeWire/WirePlumber and ConnMan. Plasma's
+`plasma-pa` connects to Batocera's Pulse-compatible socket; a boot service restricts that local
+socket to root and desktop UID 1000 before granting access. Plasma must not start another audio
+policy daemon.
+
+Plasma's `plasma-nm` is not used because it requires NetworkManager. The live prototype uses
+CMST as a temporary client of Batocera's host ConnMan over the system bus. NetworkManager,
+container ConnMan, iwd, and container wpa_supplicant remain disabled. The shipping direction is
+a typed project broker and native settings page rather than retaining an unmaintained tray app.
+
+Desktop Mode remains a synchronous Ports launch. The session defensively preserves and mutes
+any surviving EmulationStation Pulse stream, then restores its previous state on every exit
+path; it never mutes the device sink.
+
+The live acceptance cycle verifies more than process startup: launch Plasma, wait for a late ES
+stream, confirm only that stream is muted, play a desktop sound, enumerate ConnMan services as
+UID 1000, return through the desktop shortcut, confirm ES audio is restored, and launch Plasma
+again. Flatpak acceptance additionally requires launching an installed graphical application;
+a successful Discovery installation alone is not a pass.

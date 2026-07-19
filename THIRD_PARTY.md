@@ -19,3 +19,16 @@ Opening BUA is always an explicit user action. The base image does not launch it
 boot, preinstall catalog items, or include proprietary catalog payloads. Factory
 reset and support tooling must be able to distinguish BUA-managed files under
 `/userdata` from signed base-image files.
+
+## ConnMan System Tray
+
+The live prototype uses [CMST](https://github.com/andrew-bibb/cmst) `2023.03.14-2`
+as an unprivileged graphical client for Batocera's existing ConnMan daemon. The package
+was built from the Arch User Repository recipe at commit
+`f4a6712266825dca944373aba1d241ade154b873`; its upstream source archive has SHA-256
+`eba0ec46b99968f83b889079373d18f9e5c2c624b622a3fc95f09c9362f1f423`.
+
+CMST is a prototype dependency only. It must never start a second ConnMan instance, and
+it is not the shipping settings architecture because upstream describes the project as
+feature-complete and largely unmaintained. The product direction is an unprivileged KDE
+settings page backed by a narrow, typed host broker.
