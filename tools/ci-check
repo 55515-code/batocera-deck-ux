@@ -17,6 +17,10 @@ python3 -m py_compile tools/check-dco
 python3 -m py_compile tools/update-credits
 python3 -m py_compile tools/release-source
 python3 -m py_compile tools/brandctl
+python3 -m py_compile tools/graphics-audit
+./tools/graphics-audit validate-policy
+./tools/graphics-audit verify-source
+./tools/graphics-audit verify-repository
 ./tools/update-credits --check
 
 cc -Wall -Wextra -Werror \

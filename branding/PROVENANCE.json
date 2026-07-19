@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "assets": {
+    "third_party/bua/icon.png": {
+      "creator": "Batocera Unofficial Add-Ons contributors",
+      "source": "https://github.com/batocera-unofficial-addons/batocera-unofficial-addons/tree/83ded4a122732bdc2346348dd9baac49b4d271a7",
+      "sha256": "3afb70304e5045a680529f26fe3fd55fd113cb6a5e486bf482de5af66a059386",
+      "spdx_license": "GPL-3.0-only",
+      "copyright": "Batocera Unofficial Add-Ons contributors",
+      "classification": "nominative-third-party",
+      "trademark_review": "approved-nominative",
+      "derivative_of": null
+    }
+  }
+}

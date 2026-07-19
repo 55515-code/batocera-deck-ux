@@ -20,6 +20,9 @@
 - Validate the LuigiOS brand manifest and artwork provenance. Check boot, ES, Plasma,
   settings, recovery, and Steam handoff at 1280x800 and 1920x1080; verify fallback
   artwork, text legibility, icon recognition, and a transactional demo rollback.
+- Generate graphics inventories for all policy roots, apply only exact-hash replacement
+  overlays, then visually review every boot frame, theme, icon, launch screen, help
+  overlay, preview, and recovery surface for unapproved third-party marks.
 - Built-in controls plus DualSense connect, reconnect, cursor, clicks, OSK, and exit chord.
 - Handheld 1280x800 plus HDMI dock/undock, TV overscan, audio route, and controller order.
 - Representative emulator launches, save/load/state, hotkeys, and return to ES.
