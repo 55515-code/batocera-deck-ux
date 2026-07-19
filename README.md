@@ -39,6 +39,7 @@ Batocera's pinned Buildroot source and official build container.
 
 Project-authored code and documentation are licensed under GPL-3.0. Third-party
 components retain the licenses recorded in [Third-Party Software](THIRD_PARTY.md).
+Project and upstream acknowledgements are maintained in [Credits](CREDITS.md).
 
 ## Migration quick start
 

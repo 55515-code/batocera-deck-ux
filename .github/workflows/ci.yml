@@ -36,6 +36,9 @@ jobs:
           bash -n product/package/batocera-deck-bua/files/bua-port.sh
           bash -n tools/sdk
           python -m py_compile tools/check-dco
+          python -m py_compile tools/update-credits
+      - name: Check contributor credits
+        run: ./tools/update-credits --check
       - name: Compile controller bridge with warnings as errors
         run: |
           cc -Wall -Wextra -Werror \

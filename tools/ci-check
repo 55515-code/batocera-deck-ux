@@ -14,6 +14,8 @@ sh -n product/package/batocera-deck-bua/files/bua-port.sh
 find prototype/services -type f -print0 | xargs -0 -r -n1 sh -n
 bash -n tools/sdk
 python3 -m py_compile tools/check-dco
+python3 -m py_compile tools/update-credits
+./tools/update-credits --check
 
 cc -Wall -Wextra -Werror \
     $(sdl2-config --cflags) \

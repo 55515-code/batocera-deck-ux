@@ -39,4 +39,5 @@ Use draft pull requests early. Maintainers may ask for a design note under `docs
 before accepting a change that alters trust, boot, update, storage, or privilege boundaries.
 
 Contributors are credited through Git history, release notes, and substantial-project
-acknowledgements. Use the name you want shown publicly in your Git commit author field.
+acknowledgements. Use the name you want shown publicly in your Git commit author field and
+run `./tools/update-credits` before opening the pull request.
