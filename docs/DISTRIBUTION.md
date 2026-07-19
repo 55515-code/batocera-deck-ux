@@ -27,6 +27,11 @@ The initial protocol decision and reasons for deferring a second IPFS/libp2p dat
 are recorded in [ADR 0001](adr/0001-peer-distribution-stack.md). I2P remains a possible
 opt-in privacy profile, not a claim that ordinary torrenting is anonymous.
 
+[ADR 0003](adr/0003-upstream-swarm-federation.md) requires the derivative to preserve
+and contribute to Batocera's existing swarms whenever the complete artifact is identical.
+Changed derivative images use distinct identities, while shared public objects are reused
+by digest and recognized vanilla torrent state survives migration.
+
 ## Trust and channels
 
 - Embed the first TUF root in the factory image.

@@ -40,6 +40,8 @@ recovery, input, display, storage, and desktop reliability.
 - Opt-in seeding, battery/metered policy, cache garbage collection, revocation drills.
 - Benchmark BitTorrent-only discovery before approving a second IPFS/libp2p stack.
 - Prototype I2P only as an isolated opt-in privacy profile after the default path is stable.
+- Import recognized vanilla Batocera torrent state and verify cross-community seeding by
+  complete content identity without disturbing unknown personal torrents.
 
 ## Phase 5: Product qualification
 

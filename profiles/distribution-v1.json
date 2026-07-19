@@ -14,6 +14,15 @@
     "seed_on_battery": false,
     "seed_on_metered_network": false
   },
+  "upstream_federation": {
+    "preserve_upstream_swarm_for_identical_artifacts": true,
+    "repackage_unchanged_upstream_artifacts": false,
+    "cross_seed_only_on_complete_content_match": true,
+    "preserve_recognized_vanilla_torrent_state": true,
+    "share_objects_by_digest_across_catalogs": true,
+    "require_upstream_provenance": true,
+    "respect_upstream_revocation_and_opt_out": true
+  },
   "seeding": {
     "cache_root": "/userdata/system/update-cache/objects",
     "allow_roots": ["/userdata/system/update-cache/objects"],

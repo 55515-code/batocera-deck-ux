@@ -45,6 +45,16 @@ class DistributionPolicyTests(unittest.TestCase):
         self.assertTrue(install["require_health_commit"])
         self.assertTrue(install["automatic_fallback"])
 
+    def test_upstream_swarms_are_federated_without_impersonation(self):
+        federation = self.policy["upstream_federation"]
+        self.assertTrue(federation["preserve_upstream_swarm_for_identical_artifacts"])
+        self.assertFalse(federation["repackage_unchanged_upstream_artifacts"])
+        self.assertTrue(federation["cross_seed_only_on_complete_content_match"])
+        self.assertTrue(federation["preserve_recognized_vanilla_torrent_state"])
+        self.assertTrue(federation["share_objects_by_digest_across_catalogs"])
+        self.assertTrue(federation["require_upstream_provenance"])
+        self.assertTrue(federation["respect_upstream_revocation_and_opt_out"])
+
 
 if __name__ == "__main__":
     unittest.main()
