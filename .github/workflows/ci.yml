@@ -18,7 +18,7 @@ jobs:
       - name: Check contribution sign-offs
         if: github.event_name == 'pull_request'
         run: ./tools/check-dco "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install native build dependencies
