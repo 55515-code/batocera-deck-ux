@@ -22,10 +22,16 @@ jobs:
         run: test "${GITHUB_REF_NAME}" = "v$(cat VERSION)"
       - name: Install native build dependencies
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libsdl2-dev
-      - name: Run the complete validation gate
-        run: ./tools/ci-check
+      - name: Qualify the exact source revision
+        run: ./tools/qualify-source run --output "${RUNNER_TEMP}/source-qualification"
       - name: Build reproducible contributor source archive
         run: ./tools/release-source
+      - name: Add source qualification evidence
+        run: |
+          cp "${RUNNER_TEMP}/source-qualification/report.json" \
+            "dist/luigios-$(cat VERSION).qualification.json"
+          cp "${RUNNER_TEMP}/source-qualification/ci-check.log" \
+            "dist/luigios-$(cat VERSION).ci-check.log"
       - name: Create human-gated draft release
         env:
           GH_TOKEN: ${{ github.token }}

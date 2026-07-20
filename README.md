@@ -28,7 +28,7 @@ enabled by default.
 
 The repository is split into three layers:
 
-- `product/`: reproducible image and package integration (planned).
+- `product/`: Buildroot packages and pinned desktop-image integration.
 - `tools/`: testable host-side services and migration logic.
 - `ui/`: graphical, controller-first clients of those services (planned).
 - `profiles/`: machine-readable product, interface, trust, and compatibility contracts.
@@ -81,6 +81,9 @@ pinned and hash-checked; catalog payloads remain outside the signed base OS. See
 Contributors can start with [Contributing](CONTRIBUTING.md), then use the focused
 issue forms and pull-request checklist. The complete local validation gate is
 `./tools/ci-check`; product-level expectations are in [Testing](docs/TESTING.md).
+`./tools/sdk qualify` runs that gate from a clean revision and creates a verifiable,
+commit-bound source evidence bundle without mislabeling source QA as image or hardware
+qualification.
 Image contributors use the side-by-side [project SDK](sdk/README.md), which wraps
 Batocera's pinned Buildroot source and official build container.
 The [community launch kit](community/README.md) defines Discord, Reddit, moderation,

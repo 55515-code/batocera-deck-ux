@@ -38,6 +38,12 @@ artifact. The settings registry alone does not count as a settings application. 
 export alone does not pass: restore must be rehearsed into a disposable target and its
 result verified before the creator's Deck is reinstalled.
 
+Source qualification is the reproducible starting point, not beta entry. The
+`source-qualification-v1` report proves that one clean Git tree passed the authoritative
+source gate with immutable upstream and container pins. It explicitly records false for
+image, hardware, and beta qualification until separately bound candidate-image and device
+evidence exist.
+
 ## Fresh-install rehearsal
 
 Fresh installation is a post-beta operation, not a shortcut to reach beta.

@@ -2,6 +2,12 @@
 
 ## Pull-request gate
 
+`./tools/ci-check` is the only authoritative source gate. On a clean revision,
+`./tools/qualify-source run` executes it and emits `report.json` plus a SHA-256-bound
+log. GitHub Actions uploads that evidence for every pull request and main-branch build.
+The report is bound to the Git commit, tree, dependency pins, and Buildroot package set.
+It deliberately does not claim that an OS image was built or hardware-qualified.
+
 - Python unit tests, JSON policy invariants, shell syntax, and warning-clean bridge build.
 - Repository hygiene scan for private payloads, credentials, moving remote execution,
   and oversized accidental artifacts.

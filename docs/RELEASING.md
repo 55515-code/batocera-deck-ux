@@ -5,6 +5,13 @@ Their manifest explicitly identifies them as contributor source, not an end-user
 Pushing a matching `v$(cat VERSION)` tag creates a draft source release; a maintainer must
 inspect and publish it. See [Maintainer Setup](MAINTAINER_SETUP.md).
 
+Every candidate source revision first produces a clean-tree qualification bundle with
+`./tools/qualify-source run`. Verify downloaded CI evidence with
+`./tools/qualify-source verify --detached PATH`; detached verification proves the report/log
+binding, while verification in the source checkout additionally requires the exact commit,
+tree, and dependency pins. Source qualification never substitutes for the two clean image
+builds and reference-device tests below.
+
 Experimental builds cannot be labeled beta until all gates in
 `profiles/beta-qualification-v1.json` pass on the exact candidate artifact. A fresh
 install of the creator's Deck happens only after beta entry, verified non-ROM backup,

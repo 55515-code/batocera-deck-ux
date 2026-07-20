@@ -22,7 +22,9 @@ python3 -m py_compile tools/cosmic-image
 python3 -m py_compile tests/test_cosmic_image_builder.py
 python3 -m py_compile tools/render-brand-assets
 python3 -m py_compile tools/communityctl
+python3 -m py_compile tools/qualify-source
 ./tools/communityctl validate
+./tools/qualify-source plan >/dev/null
 ./tools/cosmic-image validate
 ./tools/build-cosmic-image plan >/dev/null
 ./tools/render-brand-assets --check
