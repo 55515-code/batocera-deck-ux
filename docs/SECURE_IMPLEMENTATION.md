@@ -7,6 +7,27 @@ This policy governs code authored for LuigiOS. Imported projects retain their up
 language and architecture, but integrations must pin versions, isolate privileges, track
 vulnerabilities, preserve security updates, and avoid expanding their trust boundary.
 
+## Security objectives
+
+Every new LuigiOS component is designed around five practical outcomes:
+
+- Memory-safe implementation by default, with a narrow and reviewed exception path for
+  unavoidable unsafe, FFI, kernel, or hardware code.
+- Defense in depth across process privileges, filesystem access, kernel controls, input
+  bounds, authenticated updates, and recoverable state transitions.
+- Small, explicit security cores: privileged services do the minimum work required and
+  expose typed operations instead of general command execution.
+- Fail-closed handling of untrusted ROM metadata, archives, network objects, controller
+  input, and update content, while preserving user data during crashes or interrupted work.
+- Evidence before promotion: policy checks, static analysis, hardening, dependency review,
+  sanitizers, fuzzing, and recovery tests are release inputs rather than post-release hopes.
+
+“Secure core” refers to the small privileged boundary that protects device settings,
+storage, updates, migration, and recovery. It does not mean that an emulator, desktop
+application, or imported upstream component is trusted merely because it is included in
+the image. Those applications remain unprivileged where practical and are isolated behind
+the narrowest supported boundary.
+
 ## Language selection
 
 1. New image-owned daemons, privileged brokers, network services, update clients,
@@ -44,6 +65,9 @@ well-isolated integration with a clear update path over a new local implementati
   allocation growth, decompression ratios, and archive extraction paths fail closed.
 - Low-memory and allocation-failure behavior is part of fault testing. A service may
   reject work or restart cleanly; it must not corrupt persistent state.
+- Emulator content, save data, metadata, and imported configuration are treated as
+  untrusted input even when supplied locally. Parsers and importers must use bounded,
+  recoverable workflows and must never require root merely to play a game.
 
 ## Process and privilege boundaries
 

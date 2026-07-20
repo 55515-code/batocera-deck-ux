@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import pathlib
 import shutil
 import subprocess
@@ -23,6 +24,13 @@ BRIGHT = "#66FF66"
 SURFACE = "#000000"
 PANEL = "#121416"
 TEXT = "#F5F7FA"
+
+RENDER_ENV = {
+    **os.environ,
+    "MAGICK_THREAD_LIMIT": "1",
+    "OMP_NUM_THREADS": "1",
+    "SOURCE_DATE_EPOCH": "0",
+}
 
 SETTINGS_ICONS = (
     "controller",
@@ -210,7 +218,11 @@ def run_magick(source: pathlib.Path, output: pathlib.Path, *operations: str) -> 
     if command is None:
         raise SystemExit("ImageMagick 'magick' is required to render raster assets")
     output.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run([command, "-background", "none", str(source), *operations, str(output)], check=True)
+    subprocess.run(
+        [command, "-background", "none", str(source), *operations, str(output)],
+        check=True,
+        env=RENDER_ENV,
+    )
 
 
 def render_community_assets(destination: pathlib.Path) -> None:
@@ -224,6 +236,7 @@ def render_community_assets(destination: pathlib.Path) -> None:
          "-resize", "288x288", "-background", SURFACE, "-gravity", "center",
          "-extent", "512x512", "-strip", str(avatar)],
         check=True,
+        env=RENDER_ENV,
     )
     banner = destination / "community/banner-1920x480.png"
     subprocess.run(
@@ -233,6 +246,7 @@ def render_community_assets(destination: pathlib.Path) -> None:
          "-resize", "144x144", ")", "-gravity", "west", "-geometry", "+96+0",
          "-composite", "-strip", str(banner)],
         check=True,
+        env=RENDER_ENV,
     )
 
 
@@ -285,26 +299,20 @@ def render_product_surfaces(destination: pathlib.Path) -> None:
     command = shutil.which("ffmpeg")
     if command is None:
         raise SystemExit("ffmpeg is required to render the boot splash")
-    with tempfile.TemporaryDirectory() as temporary:
-        frame = pathlib.Path(temporary) / "splash-frame.png"
-        magick = shutil.which("magick")
-        subprocess.run(
-            [magick, str(destination / "desktop/wallpapers/luigios/1280x800.png"),
-             "(", "-background", "none", str(destination / "core/luigios-logo.svg"),
-             "-resize", "430x138", ")", "-gravity", "north", "-geometry", "+0+60",
-             "-composite", "-strip", str(frame)],
-            check=True,
-        )
-        splash = destination / "boot/luigios-splash.mp4"
-        subprocess.run(
-            [command, "-loglevel", "error", "-y", "-loop", "1", "-framerate", "30",
-             "-i", str(frame), "-t", "3", "-vf",
-             "fade=t=in:st=0:d=0.35,fade=t=out:st=2.55:d=0.45,format=yuv420p",
-             "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "18",
-             "-movflags", "+faststart", "-map_metadata", "-1", "-fflags", "+bitexact",
-             "-flags:v", "+bitexact", str(splash)],
-            check=True,
-        )
+    frame = destination / "boot/luigios-splash-frame.png"
+    copy_generated(destination / "desktop/wallpapers/luigios/1280x800.png", frame)
+    splash = destination / "boot/luigios-splash.mp4"
+    subprocess.run(
+        [command, "-loglevel", "error", "-y", "-filter_threads", "1",
+         "-filter_complex_threads", "1", "-loop", "1", "-framerate", "30",
+         "-i", str(frame), "-t", "3", "-vf",
+         "fade=t=in:st=0:d=0.35,fade=t=out:st=2.55:d=0.45,format=yuv420p",
+         "-an", "-c:v", "mpeg4", "-q:v", "2", "-threads", "1",
+         "-movflags", "+faststart", "-map_metadata", "-1", "-fflags", "+bitexact",
+         "-flags:v", "+bitexact", str(splash)],
+        check=True,
+        env=RENDER_ENV,
+    )
 
 
 def render(destination: pathlib.Path) -> None:
@@ -344,10 +352,54 @@ def compare(rendered: pathlib.Path) -> list[str]:
     return differences
 
 
+def update_global_provenance(rendered: pathlib.Path) -> None:
+    provenance_path = BRANDING / "PROVENANCE.json"
+    provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+    records = provenance.get("assets", {})
+    missing = []
+    for path in rendered.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in {".mp4", ".png", ".svg"}:
+            continue
+        key = f"assets/{path.relative_to(rendered).as_posix()}"
+        record = records.get(key)
+        if not isinstance(record, dict):
+            missing.append(key)
+            continue
+        record["sha256"] = digest(path)
+    if missing:
+        raise SystemExit("missing global provenance for: " + ", ".join(sorted(missing)))
+    write(provenance_path, (json.dumps(provenance, indent=2) + "\n").encode())
+
+
+def adopt(rendered: pathlib.Path) -> int:
+    if not rendered.is_dir():
+        raise SystemExit(f"render output does not exist: {rendered}")
+    files = [path for path in rendered.rglob("*") if path.is_file()]
+    if not files:
+        raise SystemExit("render output is empty")
+    for path in files:
+        target = ASSETS / path.relative_to(rendered)
+        write(target, path.read_bytes())
+    update_global_provenance(rendered)
+    return len(files)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--check", action="store_true")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--check", action="store_true")
+    modes.add_argument("--output", type=pathlib.Path)
+    modes.add_argument("--adopt-output", type=pathlib.Path)
     args = parser.parse_args()
+    if args.adopt_output:
+        count = adopt(args.adopt_output)
+        print(f"adopted {count} assets from pinned renderer")
+        return 0
+    if args.output:
+        args.output.mkdir(parents=True, exist_ok=True)
+        render(args.output)
+        print(f"rendered {sum(1 for path in args.output.rglob('*') if path.is_file())} assets")
+        return 0
     with tempfile.TemporaryDirectory() as temporary:
         rendered = pathlib.Path(temporary)
         render(rendered)
@@ -356,11 +408,7 @@ def main() -> int:
             for path in differences:
                 print(f"out of date: {path}")
             return int(bool(differences))
-        for path in rendered.rglob("*"):
-            if path.is_file():
-                target = ASSETS / path.relative_to(rendered)
-                write(target, path.read_bytes())
-        print(f"rendered {sum(1 for path in rendered.rglob('*') if path.is_file())} assets")
+        print(f"rendered {adopt(rendered)} assets")
     return 0
 
 

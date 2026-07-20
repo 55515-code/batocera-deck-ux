@@ -49,8 +49,12 @@ owners; LuigiOS chrome stays quiet enough that the player's library is primary.
 3. Check the symbolic mark at 16, 24, 32, and 48 px on light and dark backgrounds.
 4. Verify controller focus, touch targets, pointer visibility, reduced motion, and
    readable error states in Game Mode, COSMIC, settings, and recovery.
-5. Run a demo deployment dry-run, apply it transactionally, reboot, test every
+5. Regenerate managed art with `./tools/check-rendered-brand-assets render`, then run
+   `./tools/check-rendered-brand-assets check` to rebuild and compare it in the same
+   pinned, read-only renderer container. Host ImageMagick output is not release
+   evidence even when its version string appears identical.
+6. Run a demo deployment dry-run, apply it transactionally, reboot, test every
    transition, and restore the generated backup.
-6. Record provenance and redistribution rights before an asset enters an image.
+7. Record provenance and redistribution rights before an asset enters an image.
 
 The machine-readable slot inventory is [brand-v1.json](../branding/brand-v1.json).

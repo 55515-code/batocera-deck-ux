@@ -27,7 +27,8 @@ python3 -m py_compile tools/qualify-source
 ./tools/qualify-source plan >/dev/null
 ./tools/cosmic-image validate
 ./tools/build-cosmic-image plan >/dev/null
-./tools/render-brand-assets --check
+./tools/check-rendered-brand-assets plan >/dev/null
+./tools/check-rendered-brand-assets check
 ./tools/graphics-audit validate-policy
 ./tools/graphics-audit verify-source
 ./tools/graphics-audit verify-repository

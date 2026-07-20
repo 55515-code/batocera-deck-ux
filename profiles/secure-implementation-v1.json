@@ -2,6 +2,14 @@
   "schema_version": 1,
   "id": "luigios-secure-implementation-v1",
   "scope": "luigios-authored-code",
+  "security_objectives": {
+    "memory_safe_by_default": true,
+    "defense_in_depth": true,
+    "secure_core_boundaries": true,
+    "fail_closed_on_untrusted_input": true,
+    "preserve_user_data_during_faults": true,
+    "security_is_verified_before_beta": true
+  },
   "integration_policy": {
     "prefer_mature_maintained_upstream": true,
     "rewrite_upstream_by_default": false,
@@ -48,6 +56,15 @@
     "resource_limits": true,
     "kernel_sandbox_when_supported": true,
     "custom_cryptography": false
+  },
+  "core_security": {
+    "privileged_core_services_are_minimal": true,
+    "core_services_have_explicit_trust_boundaries": true,
+    "emulator_and_desktop_apps_run_unprivileged": true,
+    "untrusted_content_is_parsed_in_bounded_processes": true,
+    "crash_recovery_is_non_destructive": true,
+    "update_and_rollback_metadata_is_authenticated": true,
+    "security_controls_are_documented_when_unavailable": true
   },
   "verification": {
     "locked_dependency_audit": true,

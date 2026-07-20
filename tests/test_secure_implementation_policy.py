@@ -9,6 +9,29 @@ POLICY = json.loads((ROOT / "profiles/secure-implementation-v1.json").read_text(
 
 
 class SecureImplementationPolicyTests(unittest.TestCase):
+    def test_security_objectives_make_memory_safety_and_core_boundaries_explicit(self):
+        objectives = POLICY["security_objectives"]
+        for key in (
+            "memory_safe_by_default",
+            "defense_in_depth",
+            "secure_core_boundaries",
+            "fail_closed_on_untrusted_input",
+            "preserve_user_data_during_faults",
+            "security_is_verified_before_beta",
+        ):
+            self.assertTrue(objectives[key], key)
+
+        core = POLICY["core_security"]
+        for key in (
+            "privileged_core_services_are_minimal",
+            "core_services_have_explicit_trust_boundaries",
+            "emulator_and_desktop_apps_run_unprivileged",
+            "untrusted_content_is_parsed_in_bounded_processes",
+            "crash_recovery_is_non_destructive",
+            "update_and_rollback_metadata_is_authenticated",
+        ):
+            self.assertTrue(core[key], key)
+
     def test_new_sensitive_code_defaults_to_memory_safe_rust(self):
         language = POLICY["language_policy"]
         self.assertEqual("rust", language["new_privileged_network_parser_and_daemon_code"])
@@ -51,6 +74,10 @@ class SecureImplementationPolicyTests(unittest.TestCase):
     def test_human_policy_covers_secrets_fuzzing_and_faults(self):
         text = (ROOT / "docs/SECURE_IMPLEMENTATION.md").read_text()
         for phrase in (
+            "Memory-safe implementation by default",
+            "Small, explicit security cores",
+            "Fail-closed handling of untrusted",
+            "must never require root merely to play a game",
             "default to stable Rust",
             "Core dumps are disabled",
             "coverage-guided fuzzing",

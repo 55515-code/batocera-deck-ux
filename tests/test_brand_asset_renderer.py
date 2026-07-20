@@ -10,13 +10,27 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 RENDERER = ROOT / "tools/render-brand-assets"
 
 
+class PinnedRendererContractTests(unittest.TestCase):
+    def test_pinned_renderer_plan_is_immutable_and_read_only(self):
+        checker = (ROOT / "tools/check-rendered-brand-assets").read_text()
+        gate = (ROOT / "tools/ci-check").read_text()
+        versions = (ROOT / "sdk/versions.env").read_text()
+        self.assertRegex(versions, r"COSMIC_ARCH_IMAGE=.*@sha256:[0-9a-f]{64}")
+        self.assertIn("COSMIC_ARCH_SNAPSHOT", checker)
+        self.assertIn('$ROOT:/repo:ro', checker)
+        self.assertNotIn("--privileged", checker)
+        self.assertIn("./tools/check-rendered-brand-assets check", gate)
+
+    def test_splash_fallback_is_the_deterministic_handheld_wallpaper(self):
+        wallpaper = ROOT / "branding/assets/desktop/wallpapers/luigios/1280x800.png"
+        frame = ROOT / "branding/assets/boot/luigios-splash-frame.png"
+        provenance = json.loads((ROOT / "branding/PROVENANCE.json").read_text())
+        self.assertEqual(wallpaper.read_bytes(), frame.read_bytes())
+        self.assertIn("assets/boot/luigios-splash-frame.png", provenance["assets"])
+
+
 @unittest.skipUnless(shutil.which("magick"), "ImageMagick is unavailable")
 class BrandAssetRendererTests(unittest.TestCase):
-    def test_checked_in_assets_match_renderer(self):
-        result = subprocess.run(
-            [str(RENDERER), "--check"], check=False, capture_output=True, text=True
-        )
-        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
 
     def test_wallpaper_dimensions_match_handheld_and_tv_contracts(self):
         expected = {
@@ -72,7 +86,7 @@ class BrandAssetRendererTests(unittest.TestCase):
             text=True,
         )
         stream = json.loads(result.stdout)["streams"][0]
-        self.assertEqual("h264", stream["codec_name"])
+        self.assertEqual("mpeg4", stream["codec_name"])
         self.assertEqual((1280, 800), (stream["width"], stream["height"]))
         self.assertEqual("yuv420p", stream["pix_fmt"])
 

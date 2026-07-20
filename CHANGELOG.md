@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Made secure cores and memory safety explicit release objectives, including bounded
+  handling of emulator content, unprivileged desktop/emulator execution, and
+  non-destructive crash recovery.
 - Added deterministic LuigiOS boot, Game Mode, desktop wallpaper, mascot, settings,
   and recovery assets with exact provenance and OLED-black surface checks.
 - Added transactional demo branding activation, backup, rollback, and watchdog tools.

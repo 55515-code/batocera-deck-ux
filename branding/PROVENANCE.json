@@ -2,48 +2,149 @@
   "schema_version": 1,
   "assets": {
     "assets/boot/luigios-splash.mp4": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "8d8167f2703f878253966318d16f150ca31339f8c1c22e8b92b5b4f3115def06", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "generated-original", "trademark_review": "not-applicable", "derivative_of": "assets/desktop/wallpapers/luigios/1280x800.png"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "e18dc6cca240f908e519f76be87a41c3458fcb62a4664f7427dc0d21c8762b02",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "generated-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/desktop/wallpapers/luigios/1280x800.png"
+    },
+    "assets/boot/luigios-splash-frame.png": {
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "9e26221fc23624ff5735682f6c5ae32f40bbf4d10287e0cc18b473af875e429c",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "generated-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/desktop/wallpapers/luigios/1280x800.png"
     },
     "assets/game-mode/theme/art/background.png": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "cc4f8a1fdbd0a15b7fc4ce656d9575bce0c4a546529c1303329c4f2364889d91", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "generated-original", "trademark_review": "not-applicable", "derivative_of": "assets/desktop/wallpapers/luigios/1280x800.png"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "9e26221fc23624ff5735682f6c5ae32f40bbf4d10287e0cc18b473af875e429c",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "generated-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/desktop/wallpapers/luigios/1280x800.png"
     },
     "assets/game-mode/theme/art/logo.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "8b3200e5da3001edcc843ffd39ddb93cbb54c8f9d1559bcaa37129a4139258b8", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": "assets/core/luigios-logo.svg"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "8b3200e5da3001edcc843ffd39ddb93cbb54c8f9d1559bcaa37129a4139258b8",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/core/luigios-logo.svg"
     },
     "assets/game-mode/theme/art/pixel.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "c981d5769f3a23ce52b673a3eb0371e64d14c8bd8e18f55653f5277b5fc13cbb", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "c981d5769f3a23ce52b673a3eb0371e64d14c8bd8e18f55653f5277b5fc13cbb",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/system/recovery/caretaker-angel.png": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "b87147d4b40e1ebb1176431f71f456aedeecf7baa2ad32c75b7d3873f28f6aee", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "generated-original", "trademark_review": "not-applicable", "derivative_of": "assets/mascot/caretaker-angel.png"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "b87147d4b40e1ebb1176431f71f456aedeecf7baa2ad32c75b7d3873f28f6aee",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "generated-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/mascot/caretaker-angel.png"
     },
     "assets/system/recovery/caretaker-demon.png": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "1a68a7c9169f8e8a557fe4f8ebec7fc79158dbbed4e72b4692d9a20a003c7e54", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "generated-original", "trademark_review": "not-applicable", "derivative_of": "assets/mascot/caretaker-demon.png"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "1a68a7c9169f8e8a557fe4f8ebec7fc79158dbbed4e72b4692d9a20a003c7e54",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "generated-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/mascot/caretaker-demon.png"
     },
     "assets/system/recovery/recovery.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "b9ee43e39d3a8241159bf73899d2eefb681f11e010aab29314ff256df2051914", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": "assets/semantic/recovery.svg"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "b9ee43e39d3a8241159bf73899d2eefb681f11e010aab29314ff256df2051914",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/semantic/recovery.svg"
     },
     "assets/system/settings-icons/controller.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "4d99e37854d1bef42c3fb8411de48d01953a4ead1d74906ce09fb62565d27608", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": "assets/semantic/controller.svg"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "4d99e37854d1bef42c3fb8411de48d01953a4ead1d74906ce09fb62565d27608",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/semantic/controller.svg"
     },
     "assets/system/settings-icons/network.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "75646161ea99eb00486e4c3b5aeea5e2fead4f9919c33b633b8267e0acbf04b1", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": "assets/semantic/network.svg"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "75646161ea99eb00486e4c3b5aeea5e2fead4f9919c33b633b8267e0acbf04b1",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/semantic/network.svg"
     },
     "assets/system/settings-icons/recovery.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "b9ee43e39d3a8241159bf73899d2eefb681f11e010aab29314ff256df2051914", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": "assets/semantic/recovery.svg"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "b9ee43e39d3a8241159bf73899d2eefb681f11e010aab29314ff256df2051914",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/semantic/recovery.svg"
     },
     "assets/system/settings-icons/settings.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "c22e4a773189ad1fa0f5507ab11b2eaf19cdc7b659b49b8739fcc843634d0698", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": "assets/semantic/settings.svg"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "c22e4a773189ad1fa0f5507ab11b2eaf19cdc7b659b49b8739fcc843634d0698",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/semantic/settings.svg"
     },
     "assets/system/settings-icons/storage.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "d100c04ba32f4026469f008d847a21f34cb0a8d2bb40caa1dcb0560a93d7be45", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": "assets/semantic/storage.svg"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "d100c04ba32f4026469f008d847a21f34cb0a8d2bb40caa1dcb0560a93d7be45",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/semantic/storage.svg"
     },
     "assets/system/settings-icons/update.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "5333174421b135e6dd1ecd8c7f2dcef9107d6a00c8174c2e69cbba4654443841", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": "assets/semantic/update.svg"
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "5333174421b135e6dd1ecd8c7f2dcef9107d6a00c8174c2e69cbba4654443841",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": "assets/semantic/update.svg"
     },
     "assets/boot/boot-logo-1280x800.png": {
       "creator": "LuigiOS contributors",
       "source": "tools/render-brand-assets",
-      "sha256": "61dbd31d94597bebf77713c1caa17a50644b1867f51fcbfa338841ee4c651d61",
+      "sha256": "2780a8d00edad2ce8e5c12126a3fe0a0cfc7d733b7c060c6372fbdf818fc9a28",
       "spdx_license": "CC-BY-SA-4.0",
       "copyright": "2026 LuigiOS contributors",
       "classification": "luigios-original",
@@ -53,7 +154,7 @@
     "assets/boot/boot-logo-4x3.png": {
       "creator": "LuigiOS contributors",
       "source": "tools/render-brand-assets",
-      "sha256": "afe7e5d8800b7b9588e9123325e4659b63841f64ea85b452ffa6b59c727f69d4",
+      "sha256": "eea4daa4af57dc5712122609e5a9deb2f9e0628a958e80cbe68acdf4fdbf2f43",
       "spdx_license": "CC-BY-SA-4.0",
       "copyright": "2026 LuigiOS contributors",
       "classification": "luigios-original",
@@ -73,7 +174,7 @@
     "assets/community/avatar-512.png": {
       "creator": "LuigiOS contributors",
       "source": "tools/render-brand-assets",
-      "sha256": "0b9fdcbc94700f4bd16e202e4b8e6ae29da61408b9a83740cb95492650c7184e",
+      "sha256": "f8315115470d5b0285ca2c05260b64fe40fa1a7d84d110da787f812bc7b25499",
       "spdx_license": "CC-BY-SA-4.0",
       "copyright": "2026 LuigiOS contributors",
       "classification": "luigios-original",
@@ -83,7 +184,7 @@
     "assets/community/banner-1920x480.png": {
       "creator": "LuigiOS contributors",
       "source": "tools/render-brand-assets",
-      "sha256": "001718abb019cd9e6ef01bdf1c58eefafd101ee0e7645da3515c183d3228d533",
+      "sha256": "2f8909f55464d9d77dc494147dfabcb5ad8a3db707c6e763446ef1c8a629ac35",
       "spdx_license": "CC-BY-SA-4.0",
       "copyright": "2026 LuigiOS contributors",
       "classification": "generated-original",
@@ -103,7 +204,7 @@
     "assets/desktop/wallpapers/luigios/1280x800.png": {
       "creator": "OpenAI image generation directed by LuigiOS contributors",
       "source": "branding/prompts/caretaker-network-wallpaper.md",
-      "sha256": "cc4f8a1fdbd0a15b7fc4ce656d9575bce0c4a546529c1303329c4f2364889d91",
+      "sha256": "9e26221fc23624ff5735682f6c5ae32f40bbf4d10287e0cc18b473af875e429c",
       "spdx_license": "CC-BY-SA-4.0",
       "copyright": "2026 LuigiOS contributors",
       "classification": "generated-original",
@@ -113,7 +214,7 @@
     "assets/desktop/wallpapers/luigios/1920x1080.png": {
       "creator": "OpenAI image generation directed by LuigiOS contributors",
       "source": "branding/prompts/caretaker-network-wallpaper.md",
-      "sha256": "6851d05f4efb43974e0448426d8eaf8644662930a20cdc59faf059efc190e0ea",
+      "sha256": "83ebfc9ee9679f9b049fcaf5f0f8db24e75051d4698162fb54c6e9a2554b3c93",
       "spdx_license": "CC-BY-SA-4.0",
       "copyright": "2026 LuigiOS contributors",
       "classification": "generated-original",
@@ -141,40 +242,124 @@
       "derivative_of": "source/caretaker-demon-chroma.png"
     },
     "assets/semantic/arcade.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "e73fd9872d95c1f682bc4185f8ad10c373c8a6554cee4820f6a83a4880380c55", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "e73fd9872d95c1f682bc4185f8ad10c373c8a6554cee4820f6a83a4880380c55",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/computer.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "554ac71b3f0791e739cbf3c63f3d20cab58151f62ce1cb959d247ae7d32ddc08", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "554ac71b3f0791e739cbf3c63f3d20cab58151f62ce1cb959d247ae7d32ddc08",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/controller.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "4d99e37854d1bef42c3fb8411de48d01953a4ead1d74906ce09fb62565d27608", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "4d99e37854d1bef42c3fb8411de48d01953a4ead1d74906ce09fb62565d27608",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/emulator.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "e947087ed1373590e134560050caadff59bf5cee95ca863e324d217fb4d0e927", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "e947087ed1373590e134560050caadff59bf5cee95ca863e324d217fb4d0e927",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/handheld.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "654c2cb19fe4acc83eb91dc0fb6461424492d995568e089ec5cc5313e5696ee2", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "654c2cb19fe4acc83eb91dc0fb6461424492d995568e089ec5cc5313e5696ee2",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/home-console.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "92fac1bc69d999ab3caa62fc35ce09a212805ddb62085a9177517d6bc62b5f92", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "92fac1bc69d999ab3caa62fc35ce09a212805ddb62085a9177517d6bc62b5f92",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/media.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "c51ca6c4d1fccafac9b7addc2928a3090f76e12c1b4e4416c54e17a2f2fdfa5b", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "c51ca6c4d1fccafac9b7addc2928a3090f76e12c1b4e4416c54e17a2f2fdfa5b",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/network.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "75646161ea99eb00486e4c3b5aeea5e2fead4f9919c33b633b8267e0acbf04b1", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "75646161ea99eb00486e4c3b5aeea5e2fead4f9919c33b633b8267e0acbf04b1",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/recovery.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "b9ee43e39d3a8241159bf73899d2eefb681f11e010aab29314ff256df2051914", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "b9ee43e39d3a8241159bf73899d2eefb681f11e010aab29314ff256df2051914",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/settings.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "c22e4a773189ad1fa0f5507ab11b2eaf19cdc7b659b49b8739fcc843634d0698", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "c22e4a773189ad1fa0f5507ab11b2eaf19cdc7b659b49b8739fcc843634d0698",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/storage.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "d100c04ba32f4026469f008d847a21f34cb0a8d2bb40caa1dcb0560a93d7be45", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "d100c04ba32f4026469f008d847a21f34cb0a8d2bb40caa1dcb0560a93d7be45",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "assets/semantic/update.svg": {
-      "creator": "LuigiOS contributors", "source": "tools/render-brand-assets", "sha256": "5333174421b135e6dd1ecd8c7f2dcef9107d6a00c8174c2e69cbba4654443841", "spdx_license": "CC-BY-SA-4.0", "copyright": "2026 LuigiOS contributors", "classification": "luigios-original", "trademark_review": "not-applicable", "derivative_of": null
+      "creator": "LuigiOS contributors",
+      "source": "tools/render-brand-assets",
+      "sha256": "5333174421b135e6dd1ecd8c7f2dcef9107d6a00c8174c2e69cbba4654443841",
+      "spdx_license": "CC-BY-SA-4.0",
+      "copyright": "2026 LuigiOS contributors",
+      "classification": "luigios-original",
+      "trademark_review": "not-applicable",
+      "derivative_of": null
     },
     "source/caretaker-network-master.png": {
       "creator": "OpenAI image generation directed by LuigiOS contributors",
