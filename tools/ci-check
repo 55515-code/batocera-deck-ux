@@ -18,6 +18,14 @@ python3 -m py_compile tools/update-credits
 python3 -m py_compile tools/release-source
 python3 -m py_compile tools/brandctl
 python3 -m py_compile tools/graphics-audit
+python3 -m py_compile tools/cosmic-image
+python3 -m py_compile tests/test_cosmic_image_builder.py
+python3 -m py_compile tools/render-brand-assets
+python3 -m py_compile tools/communityctl
+./tools/communityctl validate
+./tools/cosmic-image validate
+./tools/build-cosmic-image plan >/dev/null
+./tools/render-brand-assets --check
 ./tools/graphics-audit validate-policy
 ./tools/graphics-audit verify-source
 ./tools/graphics-audit verify-repository
@@ -25,9 +33,9 @@ python3 -m py_compile tools/graphics-audit
 
 cc -Wall -Wextra -Werror \
     $(sdl2-config --cflags) \
-    prototype/desktop/plasma-gamepad-bridge.c \
+    product/package/batocera-deck-desktop-host/src/cosmic-gamepad-bridge.c \
     $(sdl2-config --libs) -lm \
-    -o /tmp/plasma-gamepad-bridge-ci
+    -o /tmp/cosmic-gamepad-bridge-ci
 
 git diff --check
 git diff --cached --check
