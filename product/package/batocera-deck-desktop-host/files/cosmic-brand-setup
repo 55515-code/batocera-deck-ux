@@ -1,0 +1,37 @@
+#!/bin/bash
+set -euo pipefail
+
+home=${LUIGIOS_COSMIC_HOME:-/userdata/system/containers/arch-cosmic/home/deck}
+rootfs=${LUIGIOS_COSMIC_ROOTFS:-/userdata/system/containers/arch-cosmic/rootfs}
+config="$home/.config/cosmic/com.system76.CosmicBackground/v1"
+wallpaper=/usr/share/luigios/branding/assets/desktop/wallpapers/luigios/1280x800.png
+
+[ -f "$rootfs$wallpaper" ] || {
+    echo "LuigiOS COSMIC wallpaper is not mounted" >&2
+    exit 1
+}
+
+install -d -m 0700 -o 1000 -g 1000 "$config"
+if [ ! -e "$config/all" ]; then
+    temporary=$(mktemp "$config/.all.XXXXXX")
+    cat >"$temporary" <<EOF
+(
+    output: "all",
+    source: Path("$wallpaper"),
+    filter_by_theme: false,
+    rotation_frequency: 3600,
+    filter_method: Lanczos,
+    scaling_mode: Zoom,
+    sampling_method: Alphanumeric,
+)
+EOF
+    chown 1000:1000 "$temporary"
+    chmod 0600 "$temporary"
+    mv "$temporary" "$config/all"
+fi
+
+if [ ! -e "$config/same-on-all" ]; then
+    printf '%s\n' true >"$config/same-on-all"
+    chown 1000:1000 "$config/same-on-all"
+    chmod 0600 "$config/same-on-all"
+fi

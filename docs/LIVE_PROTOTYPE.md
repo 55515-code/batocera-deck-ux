@@ -21,6 +21,21 @@ This is a prototype on an unreleased channel, not a production image.
 - 52 emulator configuration files parse; no broken links or stale migration paths.
 - Private firmware bundle contains 6,837 files, about 1.95 GB, and verifies by SHA-256.
 - Balanced power policy reduced observed idle temperature from 75/67 C to 46/46 C.
+- The LuigiOS Game Mode theme is active and survived a supervised EmulationStation
+  restart. The separate ROM SD mount remained untouched.
+
+## Desktop direction
+
+The Plasma environment described below is preserved only as historical prototype
+evidence and an emergency compatibility reference. It is frozen: do not add LuigiOS
+features, applications, settings integrations, or release dependencies to it.
+
+The shipping desktop is COSMIC. Source packages target the pinned contract in
+`product/desktop/cosmic-image-v1.json` and the image-owned root at
+`/userdata/system/containers/arch-cosmic/rootfs`. The live Deck does not yet have that
+rootfs. Provisioning it is blocked until the rootfs, package inventory, build
+attestation, SBOM, Flatpak runtime, fullscreen behavior, controller bridge, and return
+transaction pass offline validation with a tested watchdog rollback.
 
 ## Open release blockers
 
@@ -40,7 +55,7 @@ This is a prototype on an unreleased channel, not a production image.
   operation before advertising Flatpak support; Discovery should show an
   actionable unsupported state until then.
 
-## Desktop host integration
+## Historical Plasma host integration
 
 The prototype keeps Batocera as the sole owner of PipeWire/WirePlumber and ConnMan. Plasma's
 `plasma-pa` connects to Batocera's Pulse-compatible socket; a boot service restricts that local
@@ -66,11 +81,19 @@ a successful Discovery installation alone is not a pass.
 
 The demo has a persistent LuigiOS identity and brand manifest under
 `/userdata/system/configs/luigios`, hostname setting `LUIGIOS`, a canonical
-`Return to LuigiOS Game Mode` desktop launcher, and an empty transactional asset
-staging root at `/userdata/system/add-ons/luigios/branding/assets`. The previous
-Batocera configuration was backed up before changing identity.
+`Return to LuigiOS Game Mode` desktop launcher, and a transactional asset staging
+root at `/userdata/system/add-ons/luigios`. The previous Batocera configuration was
+backed up before changing identity.
 
-No incomplete visual theme is active. Boot, ES, Plasma, settings, recovery,
-Steam presentation, and audio assets must pass `brandctl validate --require-ready`
-before transactional deployment. The first visual activation was also deferred
-because the live Deck remained at 2% while charging.
+Required boot, Game Mode, desktop wallpaper, mascot, settings-icon, and recovery
+assets now pass the brand contract and exact-provenance audit. They were staged and
+deployed with byte-for-byte verification. Game Mode activation used a watchdog and
+was retained only after EmulationStation restarted successfully. Relevant backups are
+`/userdata/system/backups/luigios-branding-20260720-022330`,
+`/userdata/system/backups/luigios-activation-20260720-022721`, and
+`/userdata/system/backups/luigios-theme-v2-20260720-0232`.
+
+The desktop wallpaper was checked in the disposable Plasma prototype only to validate
+the generic asset and UID 1000 ownership contract. This does not qualify Plasma as a
+LuigiOS release surface. COSMIC, settings, backup, and migration visuals remain release
+blockers; Steam presentation and audio cues remain optional unfinished surfaces.

@@ -1,4 +1,5 @@
 import json
+import os
 import pathlib
 import struct
 import subprocess
@@ -20,16 +21,20 @@ class BrandingTests(unittest.TestCase):
             text=True,
         )
 
-    def test_contract_is_valid_but_not_art_ready(self):
+    def test_contract_is_valid_and_required_demo_art_is_ready(self):
         result = self.run_brandctl("validate", "--format", "json")
         report = json.loads(result.stdout)
 
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertTrue(report["valid"])
-        self.assertGreater(len(report["missing_required"]), 0)
+        self.assertEqual([], report["missing_required"])
 
         ready = self.run_brandctl("validate", "--require-ready")
-        self.assertEqual(2, ready.returncode)
+        self.assertEqual(0, ready.returncode, ready.stdout + ready.stderr)
+        provenance = self.run_brandctl(
+            "validate", "--require-ready", "--require-provenance"
+        )
+        self.assertEqual(0, provenance.returncode, provenance.stdout + provenance.stderr)
 
     def test_demo_and_image_plans_use_separate_roots(self):
         demo = json.loads(self.run_brandctl("plan", "--scope", "demo", "--format", "json").stdout)
@@ -157,6 +162,36 @@ class BrandingTests(unittest.TestCase):
             self.assertEqual("old", (backups[0] / "userdata/themes/logo.svg").read_text())
             self.assertTrue((backups[0] / "deployment.json").is_file())
             self.assertTrue((root / "userdata/system/configs/luigios/identity.json").is_file())
+
+    def test_desktop_asset_owner_applies_to_created_parent_directories(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = pathlib.Path(temporary)
+            source = directory / "wallpaper.bin"
+            source.write_bytes(b"png")
+            manifest = self.fixture_manifest(
+                directory,
+                "wallpaper.bin",
+                "${DESKTOP_HOME}/.local/share/backgrounds/luigios/wallpaper.bin",
+            )
+            payload = json.loads(manifest.read_text())
+            payload["slots"][0]["deploy"][0]["owner"] = {
+                "uid": os.getuid(),
+                "gid": os.getgid(),
+            }
+            manifest.write_text(json.dumps(payload))
+            root = directory / "target"
+            home = "/userdata/home/deck"
+
+            result = self.run_brandctl(
+                "deploy", "--scope", "demo", "--root", str(root),
+                "--desktop-home", home, "--apply", manifest=manifest,
+            )
+
+            self.assertEqual(0, result.returncode, result.stderr)
+            backgrounds = root / home.lstrip("/") / ".local/share/backgrounds"
+            wallpaper = backgrounds / "luigios/wallpaper.bin"
+            self.assertEqual(os.getuid(), backgrounds.stat().st_uid)
+            self.assertEqual(os.getuid(), wallpaper.stat().st_uid)
 
     @staticmethod
     def fixture_manifest(directory, source, destination, constraints=None):

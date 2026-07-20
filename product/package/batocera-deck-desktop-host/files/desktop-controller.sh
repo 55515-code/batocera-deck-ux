@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-bridge=/usr/libexec/batocera-deck-desktop/plasma-gamepad-bridge
+bridge=/usr/libexec/batocera-deck-desktop/cosmic-gamepad-bridge
 runtime=/run/batocera-deck-desktop
 pidfile="$runtime/controller.pid"
 log=/userdata/system/logs/batocera-deck-controller.log

@@ -23,6 +23,7 @@ class DesktopHostPackageTests(unittest.TestCase):
         self.assertIn("batocera-deck-desktop-host/Config.in", top_config)
         self.assertIn("config BR2_PACKAGE_BATOCERA_DECK_DESKTOP_HOST", config)
         self.assertIn("experimental", config.lower())
+        self.assertIn("COSMIC", config)
         self.assertNotRegex(config, r"(?m)^\s*default\s+y\s*$")
         self.assertIn("does not download or embed", config)
         self.assertIn("not a production security boundary", config)
@@ -31,13 +32,38 @@ class DesktopHostPackageTests(unittest.TestCase):
 
     def test_build_uses_target_toolchain_and_declares_dependencies(self):
         makefile = self.read("batocera-deck-desktop-host.mk")
+        logical_makefile = makefile.replace("\\\n", " ")
 
         self.assertIn("$(TARGET_CC)", makefile)
         self.assertIn("$(TARGET_CFLAGS)", makefile)
         self.assertIn("$(TARGET_LDFLAGS)", makefile)
         self.assertIn("-Wall -Wextra -Werror", makefile)
-        for dependency in ("acl", "dbus", "jq", "pipewire", "sdl2", "util-linux"):
-            self.assertRegex(makefile, rf"DEPENDENCIES\s*=.*\b{re.escape(dependency)}\b")
+        for hardening in (
+            "-fstack-protector-strong",
+            "-fPIE",
+            "-Wl,-z,relro",
+            "-Wl,-z,now",
+            "-Wl,-z,noexecstack",
+            "-pie",
+        ):
+            self.assertIn(hardening, makefile)
+        for dependency in (
+            "acl",
+            "batocera-luigios-branding",
+            "batocera-onscreen-keyboard",
+            "dbus",
+            "jq",
+            "pipewire",
+            "sdl2",
+            "util-linux",
+            "wlrctl",
+        ):
+            self.assertRegex(
+                logical_makefile,
+                rf"DEPENDENCIES\s*=.*\b{re.escape(dependency)}\b",
+            )
+        self.assertIn("BR2_PACKAGE_WLRCTL", self.read("Config.in"))
+        self.assertIn("BR2_PACKAGE_BATOCERA_ONSCREEN_KEYBOARD", self.read("Config.in"))
 
     def test_package_is_self_contained_and_has_no_mutable_rootfs(self):
         all_text = "\n".join(
@@ -78,7 +104,7 @@ class DesktopHostPackageTests(unittest.TestCase):
 
     def test_status_is_observational_and_process_state_is_validated(self):
         service = self.read("files/desktop-host-service")
-        session = self.read("files/arch-plasma-session.sh")
+        session = self.read("files/arch-cosmic-session.sh")
         status_body = service.split('status)', 1)[1].split(';;', 1)[0]
 
         for mutator in ("rm ", "kill", "mount", "setfacl", "chmod"):
@@ -88,7 +114,7 @@ class DesktopHostPackageTests(unittest.TestCase):
         self.assertIn("--no-new-privs", session)
 
     def test_mounts_do_not_recursively_expose_host_runtime_or_sysfs(self):
-        mounts = self.read("files/arch-plasma-mounts.sh")
+        mounts = self.read("files/arch-cosmic-mounts.sh")
         package_text = "\n".join(
             path.read_text(encoding="utf-8", errors="ignore")
             for path in PACKAGE.rglob("*") if path.is_file()
@@ -113,6 +139,8 @@ class DesktopHostPackageTests(unittest.TestCase):
             'bind_dir /userdata/system/configs "$rootfs/run/luigios-branding"',
             mounts,
         )
+        self.assertIn('"$rootfs/proc" "$rootfs/dev"', mounts)
+        self.assertIn('"$rootfs/run" "$rootfs/sys"', mounts)
 
     def test_shell_files_parse(self):
         scripts = [
@@ -131,19 +159,42 @@ class DesktopHostPackageTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("sdl2-config"), "SDL2 development files unavailable")
     def test_controller_bridge_compiles_with_warnings_as_errors(self):
-        source = PACKAGE / "src/plasma-gamepad-bridge.c"
+        source = PACKAGE / "src/cosmic-gamepad-bridge.c"
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary) / "bridge"
             cflags = subprocess.check_output(["sdl2-config", "--cflags"], text=True).split()
             libs = subprocess.check_output(["sdl2-config", "--libs"], text=True).split()
             result = subprocess.run(
-                ["cc", "-Wall", "-Wextra", "-Werror", *cflags, source,
-                 *libs, "-lm", "-o", output],
+                ["cc", "-Wall", "-Wextra", "-Werror", "-fstack-protector-strong",
+                 "-fPIE", *cflags, source, *libs, "-lm", "-Wl,-z,relro",
+                 "-Wl,-z,now", "-Wl,-z,noexecstack", "-pie", "-o", output],
                 capture_output=True,
                 text=True,
                 env={**os.environ, "LC_ALL": "C"},
             )
             self.assertEqual(result.returncode, 0, result.stderr)
+            if shutil.which("readelf"):
+                header = subprocess.check_output(["readelf", "-h", output], text=True)
+                program = subprocess.check_output(["readelf", "-W", "-l", output], text=True)
+                dynamic = subprocess.check_output(["readelf", "-W", "-d", output], text=True)
+                self.assertRegex(header, r"Type:\s+DYN")
+                self.assertIn("GNU_RELRO", program)
+                stack = next(line for line in program.splitlines() if "GNU_STACK" in line)
+                self.assertNotIn("E", stack.split()[-1])
+                self.assertIn("BIND_NOW", dynamic)
+
+    def test_cosmic_is_the_only_packaged_desktop_session(self):
+        package_text = "\n".join(
+            path.read_text(encoding="utf-8", errors="ignore")
+            for path in PACKAGE.rglob("*") if path.is_file()
+        )
+
+        self.assertIn("/usr/bin/cosmic-session", package_text)
+        self.assertIn("COSMIC_BACKEND=winit", package_text)
+        self.assertIn('wlrctl toplevel fullscreen "title:$outer_title"', package_text)
+        self.assertIn("onscreen-keyboard toggle", package_text)
+        for plasma_component in ("plasma_session", "plasmashell", "kwin_wayland"):
+            self.assertNotIn(plasma_component, package_text)
 
 
 if __name__ == "__main__":

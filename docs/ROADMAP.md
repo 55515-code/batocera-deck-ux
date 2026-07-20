@@ -8,7 +8,7 @@ recovery, input, display, storage, and desktop reliability.
 - Finish game/desktop lifecycle fault tests and controller hotplug tests.
 - Replace custom RunImage Steam with Batocera's supported Steam integration.
 - Remove unrestricted chroot sudo and broad host mounts from the shipping profile.
-- Reduce Plasma cold-start time and pin the desktop image/package set.
+- Build and pin the COSMIC desktop image/package set, then measure its cold-start time.
 - Turn every live script into a versioned package with install, migration, and uninstall.
 
 ## Phase 1: Reproducible product image
@@ -17,11 +17,20 @@ recovery, input, display, storage, and desktop reliability.
 - Produce deterministic artifacts, SBOM, license report, provenance, and checksums.
 - Run clean independent rebuild comparison in GitHub Actions/self-hosted builders.
 - Publish immutable candidate artifacts; no P2P installation yet.
+- Migrate new image-owned brokers and network services to memory-safe Rust; inventory
+  existing native code, harden justified C/FFI boundaries, and add sanitizer/fuzz jobs.
 
 ## Phase 2: Graphical appliance UX
 
 - First Boot, Storage, Firmware Center, Library Import, Backup/Restore, Recovery,
   Update/Rollback, Controller, Display, and Diagnostics screens.
+- Implement atomic Gamer/Developer Mode app visibility, activation, disable, and
+  recovery reset; qualify the complete supported workflow without a terminal.
+- Replace duplicate upstream launchers and raw package/service errors in Gamer Mode
+  with unified LuigiOS library entries, settings deep links, and stable recovery actions.
+- Qualify the player-ownership contract: offline local play, no mandatory LuigiOS
+  account, no ads or sponsored ranking, portable user data, opt-in diagnostics,
+  optional software sources, and graphical removal, restore, and reset.
 - Add Btrfs Restore Points after the managed subvolume migration and power-loss tests pass;
   retain equivalent backup/restore workflows for ext4.
 - Expose privileged work through a narrow versioned broker, never GUI sudo.
@@ -46,6 +55,8 @@ recovery, input, display, storage, and desktop reliability.
 ## Phase 5: Product qualification
 
 - Hardware compatibility matrix and 100-cycle lifecycle/fault suites.
+- Qualify Steam Deck as the reference platform by explicit hardware tuple; publish
+  separate, non-blocking evidence tiers for community and downstream devices.
 - Suspend, dock/undock, TV power, Bluetooth reconnect, disk-full, interrupted update,
   factory reset, and rollback qualification.
 - Secure Boot/measured-boot decision, threat model review, penetration test, support

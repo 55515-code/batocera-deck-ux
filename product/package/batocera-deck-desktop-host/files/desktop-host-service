@@ -21,11 +21,11 @@ start_service() {
 
 case "${1:-}" in
     start) start_service ;;
-    stop) /usr/libexec/batocera-deck-desktop/arch-plasma-session stop || true ;;
+    stop) /usr/libexec/batocera-deck-desktop/arch-cosmic-session stop || true ;;
     status)
         # Status is deliberately observational.
         [ -S "$audio_socket" ] &&
-            [ -x /usr/libexec/batocera-deck-desktop/plasma-gamepad-bridge ]
+            [ -x /usr/libexec/batocera-deck-desktop/cosmic-gamepad-bridge ]
         ;;
     restart)
         "$0" stop

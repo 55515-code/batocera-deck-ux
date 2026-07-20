@@ -1,10 +1,11 @@
+import os
 import re
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP_PARTS = {".git", "__pycache__"}
+SKIP_PARTS = {".git", ".sdk", "__pycache__", "dist"}
 VENDORED = {Path("third_party/bua/bua_installerx86.py")}
 PRIVATE_NAMES = {
     "prod.keys",
@@ -17,9 +18,11 @@ PRIVATE_NAMES = {
 
 class RepositoryHygieneTests(unittest.TestCase):
     def files(self):
-        for path in ROOT.rglob("*"):
-            if path.is_file() and not (set(path.relative_to(ROOT).parts) & SKIP_PARTS):
-                yield path
+        for directory, children, filenames in os.walk(ROOT):
+            children[:] = [name for name in children if name not in SKIP_PARTS]
+            base = Path(directory)
+            for filename in filenames:
+                yield base / filename
 
     def test_no_private_payload_names(self):
         offenders = [str(path.relative_to(ROOT)) for path in self.files() if path.name in PRIVATE_NAMES]

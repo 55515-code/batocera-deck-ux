@@ -195,6 +195,7 @@ def probe_portals(portal_dirs: Sequence[str]) -> Probe:
         name
         for name in (
             "xdg-desktop-portal-kde",
+            "xdg-desktop-portal-cosmic",
             "xdg-desktop-portal-gtk",
             "xdg-desktop-portal-gnome",
             "xdg-desktop-portal-lxqt",

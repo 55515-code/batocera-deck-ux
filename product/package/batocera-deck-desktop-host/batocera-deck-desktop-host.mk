@@ -4,31 +4,44 @@
 #
 ################################################################################
 
-BATOCERA_DECK_DESKTOP_HOST_VERSION = 0.1.0
+BATOCERA_DECK_DESKTOP_HOST_VERSION = 0.2.0
 BATOCERA_DECK_DESKTOP_HOST_SITE = $(BATOCERA_DECK_DESKTOP_HOST_PKGDIR)
 BATOCERA_DECK_DESKTOP_HOST_SITE_METHOD = local
 BATOCERA_DECK_DESKTOP_HOST_LICENSE = GPL-3.0-only
 BATOCERA_DECK_DESKTOP_HOST_LICENSE_FILES = LICENSE
-BATOCERA_DECK_DESKTOP_HOST_DEPENDENCIES = acl dbus jq pipewire sdl2 util-linux
+BATOCERA_DECK_DESKTOP_HOST_DEPENDENCIES = \
+	acl \
+	batocera-luigios-branding \
+	batocera-onscreen-keyboard \
+	dbus \
+	jq \
+	pipewire \
+	sdl2 \
+	util-linux \
+	wlrctl
 
 define BATOCERA_DECK_DESKTOP_HOST_BUILD_CMDS
 	$(TARGET_CC) $(TARGET_CFLAGS) -Wall -Wextra -Werror \
-		$(@D)/src/plasma-gamepad-bridge.c \
-		-o $(@D)/plasma-gamepad-bridge \
-		$(TARGET_LDFLAGS) -lSDL2 -lm
+		-fstack-protector-strong -fPIE \
+		$(@D)/src/cosmic-gamepad-bridge.c \
+		-o $(@D)/cosmic-gamepad-bridge \
+		$(TARGET_LDFLAGS) -Wl,-z,relro -Wl,-z,now \
+		-Wl,-z,noexecstack -pie -lSDL2 -lm
 endef
 
 define BATOCERA_DECK_DESKTOP_HOST_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/plasma-gamepad-bridge \
-		$(TARGET_DIR)/usr/libexec/batocera-deck-desktop/plasma-gamepad-bridge
+	$(INSTALL) -D -m 0755 $(@D)/cosmic-gamepad-bridge \
+		$(TARGET_DIR)/usr/libexec/batocera-deck-desktop/cosmic-gamepad-bridge
 	$(INSTALL) -D -m 0755 $(@D)/files/desktop \
 		$(TARGET_DIR)/usr/bin/batocera-deck-desktop
-	$(INSTALL) -D -m 0755 $(@D)/files/arch-plasma-session.sh \
-		$(TARGET_DIR)/usr/libexec/batocera-deck-desktop/arch-plasma-session
-	$(INSTALL) -D -m 0755 $(@D)/files/arch-plasma-mounts.sh \
-		$(TARGET_DIR)/usr/libexec/batocera-deck-desktop/arch-plasma-mounts
+	$(INSTALL) -D -m 0755 $(@D)/files/arch-cosmic-session.sh \
+		$(TARGET_DIR)/usr/libexec/batocera-deck-desktop/arch-cosmic-session
+	$(INSTALL) -D -m 0755 $(@D)/files/arch-cosmic-mounts.sh \
+		$(TARGET_DIR)/usr/libexec/batocera-deck-desktop/arch-cosmic-mounts
 	$(INSTALL) -D -m 0755 $(@D)/files/desktop-controller.sh \
 		$(TARGET_DIR)/usr/libexec/batocera-deck-desktop/desktop-controller
+	$(INSTALL) -D -m 0755 $(@D)/files/cosmic-brand-setup \
+		$(TARGET_DIR)/usr/libexec/batocera-deck-desktop/cosmic-brand-setup
 	$(INSTALL) -D -m 0755 $(@D)/files/desktop-host-service \
 		$(TARGET_DIR)/usr/share/batocera/services/deck_desktop_host
 	$(INSTALL) -D -m 0755 $(@D)/files/S05deck-desktop-runtime \

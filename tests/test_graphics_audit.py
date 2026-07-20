@@ -175,6 +175,24 @@ class GraphicsAuditTests(unittest.TestCase):
         self.assertEqual(0, result.returncode, result.stderr + result.stdout)
         self.assertIn("third_party/bua/icon.png", [item["path"] for item in report["assets"]])
 
+    def test_repository_scan_ignores_declared_sdk_checkout(self):
+        result = subprocess.run(
+            [str(AUDIT), "verify-repository", "--format", "json"],
+            check=False, capture_output=True, text=True,
+        )
+        report = json.loads(result.stdout)
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertFalse(any(item["path"].startswith(".sdk/") for item in report["assets"]))
+
+    def test_repository_scan_ignores_generated_dist_artifacts(self):
+        result = subprocess.run(
+            [str(AUDIT), "verify-repository", "--format", "json"],
+            check=False, capture_output=True, text=True,
+        )
+        report = json.loads(result.stdout)
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertFalse(any(item["path"].startswith("dist/") for item in report["assets"]))
+
 
 if __name__ == "__main__":
     unittest.main()

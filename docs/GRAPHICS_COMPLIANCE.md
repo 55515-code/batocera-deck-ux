@@ -76,7 +76,7 @@ customer device; rebuild and test the image.
 Archive the source audit, candidate image inventories, replacement report,
 human review sign-off, screenshots from every OS context, and the image digest.
 Store custom license texts in `LICENSES/` using SPDX or `LicenseRef-*` identifiers.
-Re-run the complete sweep whenever Batocera, KDE, an emulator, a theme, or an
+Re-run the complete sweep whenever Batocera, COSMIC, an emulator, a theme, or an
 add-on changes.
 
 The metadata model follows the [REUSE Specification 3.3](https://reuse.software/spec/)

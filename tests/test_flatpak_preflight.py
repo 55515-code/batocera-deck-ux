@@ -28,6 +28,7 @@ class FlatpakPreflightTests(unittest.TestCase):
             "flatpak",
             "xdg-desktop-portal",
             "xdg-desktop-portal-kde",
+            "xdg-desktop-portal-cosmic",
         ):
             self.fake_command(command)
 
@@ -94,6 +95,7 @@ class FlatpakPreflightTests(unittest.TestCase):
 
     def test_portal_frontend_and_backend_are_required(self):
         (self.bin_dir / "xdg-desktop-portal-kde").unlink()
+        (self.bin_dir / "xdg-desktop-portal-cosmic").unlink()
         result, report = self.run_preflight()
 
         self.assertEqual(1, result.returncode)

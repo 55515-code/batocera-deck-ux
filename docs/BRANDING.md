@@ -5,11 +5,16 @@ recovery, and optional Steam surfaces. Unity comes from shared visual tokens,
 language, focus behavior, and transition rules. It does not require forcing every
 surface into the same layout.
 
+The identity promise is **Games first. Your device. Your choices.** Branding must
+clarify ownership and context, not turn the operating system into an advertisement.
+Game art and third-party storefront identity remain attributable to their actual
+owners; LuigiOS chrome stays quiet enough that the player's library is primary.
+
 ## Context model
 
 - **Game Mode** is controller-first, full-screen, and optimized for browsing and
   launching a library from a distance.
-- **Desktop Mode** is work-focused Plasma with pointer, touch, keyboard, and
+- **Desktop Mode** is work-focused COSMIC with pointer, touch, keyboard, and
   controller parity. It retains the same mark, colors, icon geometry, and terms.
 - **Settings** uses stable categories and the same labels whether opened from Game
   Mode or Desktop Mode. A setting must not appear to change ownership across modes.
@@ -23,6 +28,8 @@ surface into the same layout.
 - Use `Game Mode`, `Desktop Mode`, `Settings`, `Library`, `Updates`, and `Recovery`
   consistently. Avoid alternating between Batocera, Big Picture, dashboard, and
   frontend when the user-facing concept is the same.
+- Write the product name exactly as `LuigiOS`. Follow the task-language and upstream
+  attribution rules in [Identity and Voice](IDENTITY_AND_VOICE.md).
 - Preserve controller focus through dialogs and return focus to the item that opened
   a secondary surface. Touch or pointer input must not permanently steal focus mode.
 - Keep routine context transitions at or below 300 ms. Respect reduced-motion
@@ -41,7 +48,7 @@ surface into the same layout.
    typography or clipped marks.
 3. Check the symbolic mark at 16, 24, 32, and 48 px on light and dark backgrounds.
 4. Verify controller focus, touch targets, pointer visibility, reduced motion, and
-   readable error states in Game Mode, Plasma, settings, and recovery.
+   readable error states in Game Mode, COSMIC, settings, and recovery.
 5. Run a demo deployment dry-run, apply it transactionally, reboot, test every
    transition, and restore the generated backup.
 6. Record provenance and redistribution rights before an asset enters an image.

@@ -57,6 +57,11 @@
     "xbox"
   ],
   "exact_hash_denylist": [],
+  "repository_excluded_roots": [
+    ".git",
+    ".sdk",
+    "dist"
+  ],
   "artifact_roots": [
     "/boot",
     "/etc",
@@ -67,7 +72,7 @@
     "/var",
     "/userdata/splash",
     "/userdata/themes",
-    "/userdata/system/containers/arch-plasma/home/deck/.local/share"
+    "/userdata/system/containers/arch-cosmic/home/deck/.local/share"
   ],
   "replacement_roots": [
     "/boot",
@@ -76,10 +81,9 @@
     "/usr/share/icons",
     "/usr/share/luigios",
     "/usr/share/pixmaps",
-    "/usr/share/plasma",
     "/usr/share/wallpapers",
     "/userdata/splash",
     "/userdata/themes",
-    "/userdata/system/containers/arch-plasma/home/deck/.local/share"
+    "/userdata/system/containers/arch-cosmic/home/deck/.local/share"
   ]
 }

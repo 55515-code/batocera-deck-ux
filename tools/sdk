@@ -17,6 +17,12 @@ elif command -v docker >/dev/null 2>&1; then
 else
     RUNTIME=podman
 fi
+RUNTIME_ARGS=()
+IDENTITY_ARGS=(-e "HOST_UID=$(id -u)" -e "HOST_GID=$(id -g)")
+if [[ $RUNTIME == podman ]]; then
+    RUNTIME_ARGS+=(--userns=keep-id)
+    IDENTITY_ARGS=()
+fi
 
 usage() {
     cat <<'EOF'
@@ -54,15 +60,14 @@ ensure_image() {
 docker_make() {
     ensure_dirs
     ensure_image
-    "$RUNTIME" run -t --init --rm \
+    "$RUNTIME" run "${RUNTIME_ARGS[@]}" -t --init --rm \
         -v "$BATOCERA_DIR:/build:ro" \
         -v "$ROOT:/deck-ux:ro" \
         -v "$OUTPUT_DIR:/workspace" \
         -v "$DOWNLOAD_DIR:/downloads" \
         -v "$CCACHE_DIR:/home/batocera/.buildroot-ccache" \
         -w /workspace \
-        -e "HOST_UID=$(id -u)" \
-        -e "HOST_GID=$(id -g)" \
+        "${IDENTITY_ARGS[@]}" \
         "$BATOCERA_BUILD_IMAGE" \
         make "${MAKE_ARGS[@]}" O=/workspace \
             BR2_EXTERNAL=/build:/deck-ux \
@@ -161,7 +166,7 @@ case ${1:-} in
         require_source
         ensure_dirs
         ensure_image
-        exec "$RUNTIME" run -it --init --rm \
+        exec "$RUNTIME" run "${RUNTIME_ARGS[@]}" -it --init --rm \
             -v "$BATOCERA_DIR:/build:ro" -v "$ROOT:/deck-ux:ro" \
             -v "$OUTPUT_DIR:/workspace" -v "$DOWNLOAD_DIR:/downloads" \
             -v "$CCACHE_DIR:/home/batocera/.buildroot-ccache" \

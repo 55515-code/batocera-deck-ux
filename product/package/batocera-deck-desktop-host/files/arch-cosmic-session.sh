@@ -1,15 +1,16 @@
 #!/bin/bash
 set -u
 
-rootfs=/userdata/system/containers/arch-plasma/rootfs
-mounts=/usr/libexec/batocera-deck-desktop/arch-plasma-mounts
+rootfs=/userdata/system/containers/arch-cosmic/rootfs
+mounts=/usr/libexec/batocera-deck-desktop/arch-cosmic-mounts
 controller=/usr/libexec/batocera-deck-desktop/desktop-controller
+brand_setup=/usr/libexec/batocera-deck-desktop/cosmic-brand-setup
 runtime=/run/batocera-deck-desktop
 pidfile="$runtime/session.pid"
 command_file="$runtime/command"
 wayland_socket=/run/wayland-0
 guest_runtime=/run/deck-desktop-runtime-1000
-wrapper="$rootfs/usr/local/bin/kwin_wayland_wrapper"
+outer_title=Smithay
 
 valid_session_pid() {
     pid=${1:-0}
@@ -39,6 +40,7 @@ stop_session() {
             kill -KILL -- "-$session_pid" 2>/dev/null || true
     fi
     "$controller" stop >/dev/null 2>&1 || true
+    onscreen-keyboard stop >/dev/null 2>&1 || true
     rm -f "$pidfile" "$command_file"
     setfacl -x u:1000 "$wayland_socket" 2>/dev/null || true
     rm -rf "$rootfs$guest_runtime"
@@ -52,12 +54,15 @@ case "${1:-start}" in
 esac
 
 read_session_state && {
-    echo "A Plasma session is already running" >&2
+    echo "A COSMIC session is already running" >&2
     exit 1
 }
 [ -S "$wayland_socket" ] || exit 1
 [ -S "$runtime/audio/native" ] || exit 1
-[ -x "$wrapper" ] || exit 1
+[ -x "$rootfs/usr/bin/cosmic-session" ] || exit 1
+[ -x "$rootfs/usr/bin/cosmic-comp" ] || exit 1
+command -v wlrctl >/dev/null 2>&1 || exit 1
+command -v onscreen-keyboard >/dev/null 2>&1 || exit 1
 
 session_pid=
 session_start=
@@ -71,6 +76,7 @@ cleanup() {
 trap cleanup EXIT INT TERM HUP
 
 "$mounts"
+"$brand_setup"
 rm -rf "$rootfs$guest_runtime"
 mkdir -p "$rootfs$guest_runtime"
 chown 1000:1000 "$rootfs$guest_runtime"
@@ -86,15 +92,18 @@ setsid chroot "$rootfs" /usr/bin/setpriv \
     HOME=/home/deck USER=deck LOGNAME=deck SHELL=/bin/bash \
     PATH=/usr/local/sbin:/usr/local/bin:/usr/bin \
     XDG_RUNTIME_DIR="$guest_runtime" XDG_SESSION_TYPE=wayland \
-    XDG_SESSION_DESKTOP=KDE XDG_CURRENT_DESKTOP=KDE KDE_FULL_SESSION=true \
+    XDG_SESSION_DESKTOP=COSMIC XDG_CURRENT_DESKTOP=COSMIC DCONF_PROFILE=cosmic \
     XDG_CONFIG_DIRS=/etc/xdg \
     XDG_DATA_DIRS=/home/deck/.local/share/flatpak/exports/share:/usr/local/share:/usr/share \
     LUIGIOS_SESSION=desktop \
     LUIGIOS_BRAND_MANIFEST=/run/luigios-branding/brand-v1.json \
     DBUS_SYSTEM_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket \
-    WAYLAND_DISPLAY=/run/wayland-0 QT_QPA_PLATFORM=wayland \
+    WAYLAND_DISPLAY=/run/wayland-0 COSMIC_BACKEND=winit \
+    GDK_BACKEND=wayland,x11 MOZ_ENABLE_WAYLAND=1 \
+    "QT_QPA_PLATFORM=wayland;xcb" QT_AUTO_SCREEN_SCALE_FACTOR=1 \
+    QT_ENABLE_HIGHDPI_SCALING=1 \
     PULSE_SERVER=unix:/run/batocera-deck-desktop/audio/native \
-    /usr/bin/dbus-run-session -- /usr/bin/plasma_session &
+    /usr/bin/dbus-run-session -- /usr/bin/cosmic-session &
 session_pid=$!
 session_start=$(awk '{print $22}' "/proc/$session_pid/stat")
 printf '%s:%s\n' "$session_pid" "$session_start" >"$pidfile"
@@ -103,7 +112,7 @@ started=false
 for _ in $(seq 1 80); do
     valid_session_pid "$session_pid" "$session_start" || break
     for process in /proc/[0-9]*; do
-        case "$(cat "$process/comm" 2>/dev/null)" in kwin_wayland|kwin_wayland_wr) ;; *) continue ;; esac
+        [ "$(cat "$process/comm" 2>/dev/null)" = cosmic-comp ] || continue
         [ "$(readlink "$process/root" 2>/dev/null)" = "$rootfs" ] || continue
         started=true
         break
@@ -112,6 +121,19 @@ for _ in $(seq 1 80); do
     sleep 0.25
 done
 [ "$started" = true ] || exit 1
+
+# The COSMIC winit backend is a single 1280x800 Wayland toplevel named
+# "Smithay". Labwc owns the physical outputs; fullscreening that one outer
+# surface lets it resize on handheld, HDMI hotplug, and mode changes while
+# COSMIC remains the sole compositor for desktop applications.
+if ! XDG_RUNTIME_DIR=/run WAYLAND_DISPLAY=wayland-0 \
+    timeout 20 wlrctl toplevel waitfor "title:$outer_title"; then
+    echo "COSMIC outer surface did not appear" >&2
+    exit 1
+fi
+XDG_RUNTIME_DIR=/run WAYLAND_DISPLAY=wayland-0 \
+    wlrctl toplevel fullscreen "title:$outer_title" || exit 1
+
 "$controller" start || exit 1
 
 while valid_session_pid "$session_pid" "$session_start"; do
@@ -120,6 +142,7 @@ while valid_session_pid "$session_pid" "$session_start"; do
         : >"$command_file"
         case "$command" in
             return|steam-gamepadui|steam-bigpicture|steam-desktop|steam-app:*) break ;;
+            osk-toggle) onscreen-keyboard toggle >/dev/null 2>&1 || true ;;
         esac
     fi
     sleep 0.25

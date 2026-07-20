@@ -1,8 +1,11 @@
 # LuigiOS Brand System
 
 This directory is the source contract for a visually unified LuigiOS. Artwork is
-kept separate from deployment logic so boot, Game Mode, Plasma, Steam handoff,
+kept separate from deployment logic so boot, Game Mode, COSMIC, Steam handoff,
 settings, and recovery can change context without appearing to change products.
+The visual system serves **Games first. Your device. Your choices.** It keeps the
+player's library and actions primary, forbids sponsored visual placement, and
+uses LuigiOS branding for continuity rather than advertising.
 Interaction and transition rules are documented in
 [Unified Brand and Transition UX](../docs/BRANDING.md).
 
@@ -17,6 +20,7 @@ Place generated work under `branding/assets/` using the paths in
 ./tools/graphics-audit validate-policy
 ./tools/graphics-audit verify-source
 ./tools/graphics-audit verify-repository
+./tools/render-brand-assets --check
 ```
 
 The normal validation command checks the manifest and any artwork already
@@ -32,7 +36,7 @@ Every graphics file also needs an exact-path entry in `PROVENANCE.json`.
 ## Design contract
 
 - Use the same core mark, icon geometry, vocabulary, and motion timing everywhere.
-- Keep layouts adapted to context: controller-first Game Mode, work-focused Plasma,
+- Keep layouts adapted to context: controller-first Game Mode, work-focused COSMIC,
   and quiet recovery screens should be related without being identical.
 - Supply both 1280x800 handheld and 1920x1080 TV assets. Add 4K variants when the
   composition differs rather than relying on a blind crop.
@@ -45,7 +49,15 @@ Every graphics file also needs an exact-path entry in `PROVENANCE.json`.
 - Complete trademark clearance for the LuigiOS name and marks before public or
   commercial distribution; repository adoption is not legal clearance.
 - Image-scope targets are immutable build inputs. Demo-scope targets live under
-  `/userdata` or the persistent Plasma home and must be deployed transactionally.
+  `/userdata` or the persistent COSMIC home and must be deployed transactionally.
+
+The checked-in production art direction is [ART_DIRECTION.md](ART_DIRECTION.md).
+Mascot state semantics and accessibility rules are defined in
+[MASCOT.md](MASCOT.md).
+Naming and interface voice are defined in
+[Identity and Voice](../docs/IDENTITY_AND_VOICE.md).
+Composite boards and panel crops from the contributor guidance pack are not
+release assets and are intentionally absent from this repository.
 
 No placeholder artwork is shown on the device. Until a slot is ready, upstream
-Batocera or KDE artwork remains the explicit fallback.
+Batocera or COSMIC artwork remains the explicit fallback.

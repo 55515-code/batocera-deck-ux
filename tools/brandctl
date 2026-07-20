@@ -24,6 +24,10 @@ ID_PATTERN = re.compile(r"^[a-z0-9]+(?:[.-][a-z0-9]+)*$")
 ALLOWED_SCOPES = {"demo", "image"}
 DEMO_ROOTS = ("/userdata/",)
 IMAGE_ROOTS = ("/usr/share/", "/etc/")
+GRAPHICS_EXTENSIONS = {
+    ".avif", ".bmp", ".gif", ".ico", ".jpeg", ".jpg", ".mng", ".mp4",
+    ".png", ".qoi", ".svg", ".webm", ".webp",
+}
 
 
 @dataclass
@@ -52,8 +56,9 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     plan = subparsers.add_parser("plan")
     plan.add_argument("--scope", choices=sorted(ALLOWED_SCOPES), required=True)
     plan.add_argument(
-        "--plasma-home",
-        default="/userdata/system/containers/arch-plasma/home/deck",
+        "--desktop-home", "--plasma-home", dest="desktop_home",
+        default="/userdata/system/containers/arch-cosmic/home/deck",
+        help="persistent desktop home (the old --plasma-home spelling remains accepted)",
     )
     plan.add_argument("--format", choices=("human", "json"), default="human")
 
@@ -65,8 +70,9 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     deploy.add_argument("--scope", choices=sorted(ALLOWED_SCOPES), required=True)
     deploy.add_argument("--root", type=pathlib.Path, default=pathlib.Path("/"))
     deploy.add_argument(
-        "--plasma-home",
-        default="/userdata/system/containers/arch-plasma/home/deck",
+        "--desktop-home", "--plasma-home", dest="desktop_home",
+        default="/userdata/system/containers/arch-cosmic/home/deck",
+        help="persistent desktop home (the old --plasma-home spelling remains accepted)",
     )
     deploy.add_argument("--allow-incomplete", action="store_true")
     deploy.add_argument("--apply", action="store_true")
@@ -92,10 +98,12 @@ def safe_source(base: pathlib.Path, source: object) -> pathlib.Path | None:
     return base / pathlib.Path(*relative.parts)
 
 
-def resolved_destination(raw: object, plasma_home: str) -> str | None:
+def resolved_destination(raw: object, desktop_home: str) -> str | None:
     if not isinstance(raw, str) or not raw:
         return None
-    destination = raw.replace("${PLASMA_HOME}", plasma_home)
+    destination = raw.replace("${DESKTOP_HOME}", desktop_home).replace(
+        "${PLASMA_HOME}", desktop_home
+    )
     path = pathlib.PurePosixPath(destination)
     if not path.is_absolute() or ".." in path.parts:
         return None
@@ -162,10 +170,21 @@ def validate_existing_asset(path: pathlib.Path, slot: dict, report: Report) -> N
 def validate_manifest(
     manifest_path: pathlib.Path,
     manifest: dict,
-    plasma_home: str = "/userdata/system/containers/arch-plasma/home/deck",
+    desktop_home: str = "/userdata/system/containers/arch-cosmic/home/deck",
     require_provenance: bool = False,
 ) -> Report:
     report = Report([], [], [], [], [])
+    provenance_assets: dict = {}
+    if require_provenance:
+        provenance_path = manifest_path.parent / "PROVENANCE.json"
+        try:
+            provenance_payload = load_manifest(provenance_path)
+            provenance_assets = provenance_payload.get("assets", {})
+            if not isinstance(provenance_assets, dict):
+                report.errors.append("PROVENANCE.json assets must be an object")
+                provenance_assets = {}
+        except ValueError as error:
+            report.errors.append(str(error))
     if manifest.get("schema_version") != 1:
         report.errors.append("schema_version must be 1")
     product = manifest.get("product")
@@ -201,9 +220,17 @@ def validate_manifest(
             report.present.append(identifier)
             validate_existing_asset(source, slot, report)
             if require_provenance:
-                provenance = source.parent / "PROVENANCE.json" if source.is_file() else source / "PROVENANCE.json"
-                if not provenance.is_file():
-                    report.errors.append(f"{identifier}: missing PROVENANCE.json")
+                candidates = [source] if source.is_file() else [
+                    item for item in source.rglob("*")
+                    if item.is_file() and item.suffix.lower() in GRAPHICS_EXTENSIONS
+                ]
+                for candidate in candidates:
+                    key = candidate.relative_to(manifest_path.parent).as_posix()
+                    record = provenance_assets.get(key)
+                    if not isinstance(record, dict):
+                        report.errors.append(f"{identifier}: missing provenance entry {key}")
+                    elif record.get("sha256") != asset_digest(candidate):
+                        report.errors.append(f"{identifier}: provenance hash mismatch {key}")
         elif slot.get("required_for_demo") is True:
             report.missing_required.append(identifier)
         else:
@@ -218,10 +245,20 @@ def validate_manifest(
                 report.errors.append(f"{identifier}: deployment must be an object")
                 continue
             scope = deployment.get("scope")
-            destination = resolved_destination(deployment.get("destination"), plasma_home)
+            destination = resolved_destination(deployment.get("destination"), desktop_home)
             if scope not in ALLOWED_SCOPES or destination is None:
                 report.errors.append(f"{identifier}: invalid deployment")
                 continue
+            owner = deployment.get("owner")
+            if owner is not None and (
+                scope != "demo"
+                or not isinstance(owner, dict)
+                or not isinstance(owner.get("uid"), int)
+                or not isinstance(owner.get("gid"), int)
+                or owner["uid"] < 0
+                or owner["gid"] < 0
+            ):
+                report.errors.append(f"{identifier}: owner must be a non-negative demo uid/gid")
             if not destination_allowed(scope, destination):
                 report.errors.append(f"{identifier}: destination outside {scope} roots: {destination}")
             key = (scope, destination)
@@ -245,7 +282,7 @@ def asset_digest(path: pathlib.Path) -> str:
     return digest.hexdigest()
 
 
-def operations(manifest_path: pathlib.Path, manifest: dict, scope: str, plasma_home: str) -> list[dict]:
+def operations(manifest_path: pathlib.Path, manifest: dict, scope: str, desktop_home: str) -> list[dict]:
     result = []
     for slot in manifest["slots"]:
         source = safe_source(manifest_path.parent, slot["source"])
@@ -256,9 +293,10 @@ def operations(manifest_path: pathlib.Path, manifest: dict, scope: str, plasma_h
                 {
                     "id": slot["id"],
                     "source": str(source),
-                    "destination": resolved_destination(deployment["destination"], plasma_home),
+                    "destination": resolved_destination(deployment["destination"], desktop_home),
                     "present": bool(source and source.exists()),
                     "digest": asset_digest(source) if source and source.exists() else None,
+                    "owner": deployment.get("owner"),
                 }
             )
     return result
@@ -280,6 +318,21 @@ def atomic_write(path: pathlib.Path, content: bytes) -> None:
         os.replace(temporary, path)
     finally:
         temporary.unlink(missing_ok=True)
+
+
+def apply_owner(path: pathlib.Path, owner: object, boundary: pathlib.Path) -> None:
+    if not isinstance(owner, dict):
+        return
+    uid, gid = owner["uid"], owner["gid"]
+    candidates = [path]
+    if path.is_dir():
+        candidates.extend(path.rglob("*"))
+    for candidate in candidates:
+        os.chown(candidate, uid, gid, follow_symlinks=False)
+    parent = path.parent
+    while parent != boundary and boundary in parent.parents:
+        os.chown(parent, uid, gid, follow_symlinks=False)
+        parent = parent.parent
 
 
 def identity_payload(manifest: dict) -> bytes:
@@ -311,14 +364,14 @@ def deploy_assets(
     manifest_path: pathlib.Path,
     manifest: dict,
     scope: str,
-    plasma_home: str,
+    desktop_home: str,
     allow_incomplete: bool,
     apply: bool,
 ) -> int:
     if scope == "image" and apply:
         print("image-scope assets must be installed by the reproducible image build", file=sys.stderr)
         return 1
-    report = validate_manifest(manifest_path, manifest, plasma_home)
+    report = validate_manifest(manifest_path, manifest, desktop_home)
     if report.errors:
         for error in report.errors:
             print(f"error: {error}", file=sys.stderr)
@@ -326,7 +379,7 @@ def deploy_assets(
     if report.missing_required and not allow_incomplete:
         print("required demo assets are missing; refusing deployment", file=sys.stderr)
         return 2
-    planned = [item for item in operations(manifest_path, manifest, scope, plasma_home) if item["present"]]
+    planned = [item for item in operations(manifest_path, manifest, scope, desktop_home) if item["present"]]
     for item in planned:
         print(f"{item['id']}: {item['source']} -> {item['destination']}")
     if not apply:
@@ -355,6 +408,8 @@ def deploy_assets(
                 temporary = target.with_name(f".{target.name}.luigios-new")
                 shutil.copy2(source, temporary)
                 os.replace(temporary, target)
+            desktop_boundary = rooted(root, desktop_home)
+            apply_owner(target, item.get("owner"), desktop_boundary)
             changed.append((target, previous))
         record = {
             "schema_version": 1,
@@ -415,11 +470,11 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         return 0
     if args.command == "plan":
-        report = validate_manifest(args.manifest, manifest, args.plasma_home)
+        report = validate_manifest(args.manifest, manifest, args.desktop_home)
         if not report.valid:
             print_report(report, args.format)
             return 1
-        planned = operations(args.manifest, manifest, args.scope, args.plasma_home)
+        planned = operations(args.manifest, manifest, args.scope, args.desktop_home)
         if args.format == "json":
             print(json.dumps(planned, indent=2, sort_keys=True))
         else:
@@ -439,7 +494,7 @@ def main(argv: list[str] | None = None) -> int:
             args.manifest,
             manifest,
             args.scope,
-            args.plasma_home,
+            args.desktop_home,
             args.allow_incomplete,
             args.apply,
         )

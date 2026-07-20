@@ -1,5 +1,5 @@
 config BR2_PACKAGE_BATOCERA_DECK_DESKTOP_HOST
-	bool "experimental Plasma desktop host integration"
+	bool "experimental COSMIC desktop host integration"
 	depends on BR2_x86_64
 	select BR2_PACKAGE_ACL
 	select BR2_PACKAGE_BASH
@@ -10,11 +10,14 @@ config BR2_PACKAGE_BATOCERA_DECK_DESKTOP_HOST
 	select BR2_PACKAGE_UTIL_LINUX
 	select BR2_PACKAGE_UTIL_LINUX_MOUNT
 	select BR2_PACKAGE_UTIL_LINUX_SETPRIV
+	select BR2_PACKAGE_WLRCTL
+	select BR2_PACKAGE_BATOCERA_ONSCREEN_KEYBOARD
+	select BR2_PACKAGE_BATOCERA_LUIGIOS_BRANDING
 	help
 	  Install the experimental host supervisor, controller bridge, runtime
 	  policies, and launch helpers used to run a separately provisioned
-	  Plasma filesystem under Batocera's foreground game lifecycle.
+	  COSMIC filesystem under Batocera's foreground game lifecycle.
 
-	  This package does not download or embed a Plasma/Arch root filesystem.
+	  This package does not download or embed a COSMIC/Arch root filesystem.
 	  The current chroot prototype is not a production security boundary.
 	  This option is disabled by default and must be selected explicitly.

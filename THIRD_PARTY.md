@@ -30,5 +30,6 @@ was built from the Arch User Repository recipe at commit
 
 CMST is a prototype dependency only. It must never start a second ConnMan instance, and
 it is not the shipping settings architecture because upstream describes the project as
-feature-complete and largely unmaintained. The product direction is an unprivileged KDE
-settings page backed by a narrow, typed host broker.
+feature-complete and largely unmaintained. The product direction is a unified,
+unprivileged LuigiOS settings page backed by a narrow, typed host broker and
+presented consistently in Game Mode and COSMIC.

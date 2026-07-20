@@ -2,7 +2,7 @@
 set -u
 
 enable_marker=/userdata/system/configs/batocera-deck-desktop.enabled
-session=/usr/libexec/batocera-deck-desktop/arch-plasma-session
+session=/usr/libexec/batocera-deck-desktop/arch-cosmic-session
 lock=/run/batocera-deck-desktop/launch.lock
 state=/run/batocera-deck-desktop/desktop.active
 log=/userdata/system/logs/batocera-deck-desktop.log
@@ -56,5 +56,5 @@ launched_by_desktop_port || {
 }
 
 printf '%s:%s\n' "$$" "$(awk '{print $22}' /proc/$$/stat)" >"$state"
-log_message "starting foreground Plasma session"
+log_message "starting foreground COSMIC session"
 "$session" start >>"$log" 2>&1

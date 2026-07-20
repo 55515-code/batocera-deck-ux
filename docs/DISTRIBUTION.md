@@ -4,6 +4,11 @@ Peers provide storage and bandwidth. They do not decide what software is trusted
 The Update Framework (TUF) is the sole release authority; every transport is an
 untrusted source of bytes that must match TUF-authorized SHA-256 digests.
 
+Distribution serves the owner's choice rather than a mandatory project service.
+LuigiOS accounts are not required, P2P remains opt-in, HTTPS/OCI fallback remains
+independent, and commercial mirrors receive no authority to rank, rewrite, or
+authorize software outside the same signed metadata used by community peers.
+
 ## Recommended stack
 
 1. TUF delegates `steamdeck/stable`, `candidate`, `beta`, and `testing` channels.

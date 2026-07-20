@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-rootfs=/userdata/system/containers/arch-plasma/rootfs
-home=/userdata/system/containers/arch-plasma/home/deck
+rootfs=/userdata/system/containers/arch-cosmic/rootfs
+home=/userdata/system/containers/arch-cosmic/home/deck
 
 mounted() {
     findmnt -rn -o TARGET --target "$1" 2>/dev/null | grep -Fxq "$1"
@@ -43,8 +43,10 @@ stop_mounts() {
     unmount_path "$rootfs/mnt/roms"
     unmount_path "$rootfs/run/batocera-deck-desktop/audio"
     unmount_path "$rootfs/run/luigios-branding"
+    unmount_path "$rootfs/usr/share/luigios/branding"
     unmount_path "$rootfs/run/dbus/system_bus_socket"
     unmount_path "$rootfs/run/wayland-0"
+    unmount_path "$rootfs/etc/resolv.conf"
     unmount_path "$rootfs/dev/shm"
     unmount_path "$rootfs/dev/dri"
     for device in urandom random zero null; do
@@ -59,12 +61,21 @@ case "${1:-start}" in
     *) printf 'Usage: %s {start|stop}\n' "$0" >&2; exit 2 ;;
 esac
 
-[ -x "$rootfs/usr/bin/plasmashell" ] || {
-    echo "Provisioned Plasma filesystem is unavailable" >&2
-    exit 1
-}
+for executable in cosmic-session cosmic-comp cosmic-settings cosmic-store; do
+    [ -x "$rootfs/usr/bin/$executable" ] || {
+        echo "Provisioned COSMIC filesystem is missing $executable" >&2
+        exit 1
+    }
+done
+for executable in xdg-desktop-portal xdg-desktop-portal-cosmic; do
+    [ -x "$rootfs/usr/lib/$executable" ] || {
+        echo "Provisioned COSMIC filesystem is missing $executable" >&2
+        exit 1
+    }
+done
 
-mkdir -p "$home" "$rootfs/mnt/batocera"
+mkdir -p "$home" "$rootfs/mnt/batocera" "$rootfs/proc" "$rootfs/dev" \
+    "$rootfs/run" "$rootfs/sys"
 chown 1000:1000 "$home"
 chmod 0700 "$home"
 
@@ -76,9 +87,11 @@ bind_dir /dev/dri "$rootfs/dev/dri"
 bind_dir /dev/shm "$rootfs/dev/shm"
 bind_file /run/wayland-0 "$rootfs/run/wayland-0"
 bind_file /run/dbus/system_bus_socket "$rootfs/run/dbus/system_bus_socket"
+bind_file /etc/resolv.conf "$rootfs/etc/resolv.conf"
 bind_dir /run/batocera-deck-desktop/audio \
     "$rootfs/run/batocera-deck-desktop/audio"
 bind_dir /userdata/system/configs/luigios "$rootfs/run/luigios-branding" ro
+bind_dir /usr/share/luigios/branding "$rootfs/usr/share/luigios/branding" ro
 bind_dir /userdata/roms "$rootfs/mnt/roms"
 for name in bios saves screenshots themes music; do
     bind_dir "/userdata/$name" "$rootfs/mnt/batocera/$name"
