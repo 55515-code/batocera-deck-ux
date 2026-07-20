@@ -34,6 +34,8 @@ class LuigiOSBrandingPackageTests(unittest.TestCase):
                 **os.environ,
                 "LUIGIOS_COSMIC_HOME": str(home),
                 "LUIGIOS_COSMIC_ROOTFS": str(rootfs),
+                "LUIGIOS_COSMIC_UID": str(os.getuid()),
+                "LUIGIOS_COSMIC_GID": str(os.getgid()),
             }
             first = subprocess.run([str(SETUP)], env=environment, check=False, capture_output=True, text=True)
             self.assertEqual(0, first.returncode, first.stderr)
@@ -44,6 +46,24 @@ class LuigiOSBrandingPackageTests(unittest.TestCase):
             second = subprocess.run([str(SETUP)], env=environment, check=False, capture_output=True, text=True)
             self.assertEqual(0, second.returncode, second.stderr)
             self.assertEqual("user-selected-wallpaper\n", config.read_text())
+
+    def test_cosmic_brand_setup_rejects_invalid_owner_identity(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            result = subprocess.run(
+                [str(SETUP)],
+                env={
+                    **os.environ,
+                    "LUIGIOS_COSMIC_HOME": str(root / "home"),
+                    "LUIGIOS_COSMIC_ROOTFS": str(root / "rootfs"),
+                    "LUIGIOS_COSMIC_UID": "1000;id",
+                },
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(1, result.returncode)
+            self.assertIn("must be numeric", result.stderr)
 
     def test_cosmic_brand_setup_fails_without_packaged_wallpaper(self):
         with tempfile.TemporaryDirectory() as temporary:
