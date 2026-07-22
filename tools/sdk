@@ -71,6 +71,7 @@ docker_make() {
         "$BATOCERA_BUILD_IMAGE" \
         make "${MAKE_ARGS[@]}" O=/workspace \
             BR2_EXTERNAL=/build:/deck-ux \
+            BR2_GLOBAL_PATCH_DIR=/deck-ux/product/patches \
             BR2_DL_DIR=/downloads \
             BR2_CCACHE_DIR=/home/batocera/.buildroot-ccache \
             -C /build/buildroot "$@"

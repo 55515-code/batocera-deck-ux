@@ -17,6 +17,18 @@ LOADER.exec_module(QUALIFY)
 
 
 class SourceQualificationTests(unittest.TestCase):
+    def test_sdk_declares_the_pinned_cargo_compatibility_patch(self):
+        sdk = (ROOT / "tools/sdk").read_text()
+        patch = ROOT / "product/patches/cargo-c/0001-build-with-pinned-rust-1.95.patch"
+        self.assertIn("BR2_GLOBAL_PATCH_DIR=/deck-ux/product/patches", sdk)
+        self.assertTrue(patch.is_file())
+        patch_text = patch.read_text()
+        self.assertIn('rust-version = "1.96.0"', patch_text)
+        self.assertIn('Cargo.toml":"07b817dd4cebfeb8b87a221b91dcf518cce0f501ff76ff29e8fd83b65b0bdd9c"', patch_text)
+        ffmpeg_patch = ROOT / "product/patches/ffmpeg/0001-build-with-ffmpeg-8-without-removed-postproc-option.patch"
+        self.assertTrue(ffmpeg_patch.is_file())
+        self.assertIn("--enable-postproc|--disable-postproc", ffmpeg_patch.read_text())
+
     def test_source_contract_uses_only_immutable_dependency_pins(self):
         inspection = QUALIFY.inspect_source()
         self.assertEqual([], inspection["errors"])

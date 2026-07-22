@@ -18,6 +18,8 @@
   and reconnects the last healthy ConnMan Wi-Fi service without restarting networking.
 - Added a secure implementation contract with memory-safe Rust defaults, native binary
   hardening, least-privilege runtime rules, dependency audits, sanitizers, and fuzzing.
+- Added a pinned Buildroot global patch for the cargo-c vendored `kstring` MSRV metadata
+  mismatch, keeping the source tree reproducible with the pinned Rust 1.95 toolchain.
 
 ## 0.1.0-dev.1
 
