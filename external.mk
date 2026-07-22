@@ -1,1 +1,1 @@
-include $(sort $(wildcard $(BR2_EXTERNAL_BATOCERA_DECK_UX_PATH)/product/package/*/*.mk))
+include $(sort $(wildcard $(BR2_EXTERNAL_LUIGIOS_PATH)/product/package/*/*.mk))

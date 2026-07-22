@@ -29,7 +29,7 @@ class SourceReleaseTests(unittest.TestCase):
             self.assertFalse(manifest["end_user_os_image"])
             with tarfile.open(archive_a, "r:gz") as bundle:
                 names = bundle.getnames()
-            prefix = f"batocera-deck-ux-{manifest['version']}"
+            prefix = f"luigios-{manifest['version']}"
             self.assertIn(f"{prefix}/LICENSE", names)
             self.assertIn(f"{prefix}/sdk/README.md", names)
             self.assertFalse(any("private-bundles" in name for name in names))

@@ -15,13 +15,13 @@ Upstream and derivative artifacts are federated by content identity, not project
 
 - An unchanged Batocera artifact retains its upstream filename, digest, torrent info
   dictionary, source attribution, and upstream swarm identity. We do not make a cosmetic
-  rebuild or replacement torrent merely to claim it as a Deck UX artifact.
+  rebuild or replacement torrent merely to claim it as a LuigiOS artifact.
 - Our peer may seed upstream-authorized public artifacts from the dedicated object cache
   when the user enables seeding. This traffic follows the same battery, metered-network,
   bandwidth, schedule, privacy, and cache limits as project traffic.
 - Derivative artifacts with any byte difference receive a separate target digest and swarm.
   They reference the exact upstream source/image provenance from which they were produced.
-- Shared immutable objects are stored once by digest. Signed Batocera and Deck UX catalogs
+- Shared immutable objects are stored once by digest. Signed Batocera and LuigiOS catalogs
   may both reference an identical object without copying it into competing namespaces.
 - Installing over vanilla Batocera preserves recognized torrent state and completed public
   update payloads after validating paths and hashes. It never erases, retags, or silently
@@ -38,7 +38,7 @@ the cache manager explains when one object is still referenced by another truste
 
 The existing Batocera torrent directory is imported read-only first, then recognized jobs
 are adopted transactionally into the managed cache. Unknown personal torrents remain
-untouched and outside the OS updater. TUF roots stay separate: trusting Deck UX does not
+untouched and outside the OS updater. TUF roots stay separate: trusting LuigiOS does not
 grant its keys authority over Batocera targets, and vice versa.
 
 Cross-seeding is allowed only when the torrent's complete content identity matches. Similar

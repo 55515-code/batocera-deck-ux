@@ -6,7 +6,7 @@ Status: proposed
 
 Batocera already provides controller-aware settings through EmulationStation, command-line
 wrappers, `batocera-settings`, configgen, and the newer XML-driven
-`batocera-controlcenter`. The Deck product needs a deeper, searchable settings application
+`batocera-controlcenter`. LuigiOS needs a deeper, searchable settings application
 without creating a competing configuration database or exposing root shell commands to a UI.
 
 ## Decision

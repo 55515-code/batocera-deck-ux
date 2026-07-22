@@ -66,7 +66,7 @@ static int create_uinput_device(void)
         },
     };
 
-    snprintf(setup.name, sizeof(setup.name), "Batocera Plasma Gamepad Mouse");
+    snprintf(setup.name, sizeof(setup.name), "LuigiOS Desktop Gamepad Mouse");
     uinput_fd = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
     if (uinput_fd < 0) {
         perror("Could not open /dev/uinput");

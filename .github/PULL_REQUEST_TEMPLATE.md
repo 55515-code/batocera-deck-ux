@@ -8,6 +8,7 @@ explain why an existing maintained component does not fit.
 ## Validation
 
 - [ ] `./tools/ci-check` passes
+- [ ] Clean-tree source qualification evidence is attached by GitHub Actions
 - [ ] Controller-only handheld behavior tested or marked not applicable
 - [ ] Docked display and external controller behavior tested or marked not applicable
 - [ ] Persistent-data migration and rollback described

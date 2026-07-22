@@ -1,5 +1,8 @@
-menu "Batocera Deck UX"
+menu "LuigiOS"
 
-source "$BR2_EXTERNAL_BATOCERA_DECK_UX_PATH/product/package/batocera-deck-bua/Config.in"
+source "$BR2_EXTERNAL_LUIGIOS_PATH/product/package/batocera-deck-bua/Config.in"
+source "$BR2_EXTERNAL_LUIGIOS_PATH/product/package/batocera-luigios-branding/Config.in"
+source "$BR2_EXTERNAL_LUIGIOS_PATH/product/package/batocera-deck-desktop-host/Config.in"
+source "$BR2_EXTERNAL_LUIGIOS_PATH/product/package/batocera-luigios-dev-connectivity/Config.in"
 
 endmenu

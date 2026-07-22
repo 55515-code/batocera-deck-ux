@@ -1,4 +1,4 @@
-# Batocera Deck UX SDK
+# LuigiOS SDK
 
 The SDK is a thin orchestration layer around the upstream Batocera Buildroot tree and
 official Batocera build container through Docker or Podman. It does not maintain a compiler, sysroot, package
@@ -11,6 +11,7 @@ manager, emulator toolchain, or parallel image format.
 ./tools/sdk bootstrap
 ./tools/sdk config
 ./tools/sdk package batocera-deck-bua
+./tools/sdk qualify
 ```
 
 `bootstrap` checks out the Batocera revision in `sdk/versions.env` under `.sdk/batocera`
@@ -26,7 +27,11 @@ Commands:
 - `image`: build the complete x86_64 image; this is intentionally expensive.
 - `shell`: open the official build container with the same mounts and environment.
 - `test`: run the repository's fast local gate.
+- `qualify`: require a clean tree, run the authoritative gate, and create a hashed,
+  commit-bound source evidence bundle under `dist/qualification/`.
 
 SDK state stays under `.sdk/`: output, downloads, compiler cache, and the default source
 checkout. CI should cache downloads and ccache by pinned source/toolchain identity, never
 publish the writable workspace, and upload only reviewed public build artifacts.
+Both the Batocera source revision and build-container image are immutable pins. Updating
+either is a reviewed source change followed by a new qualification bundle.

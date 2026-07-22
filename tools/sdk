@@ -17,12 +17,18 @@ elif command -v docker >/dev/null 2>&1; then
 else
     RUNTIME=podman
 fi
+RUNTIME_ARGS=()
+IDENTITY_ARGS=(-e "HOST_UID=$(id -u)" -e "HOST_GID=$(id -g)")
+if [[ $RUNTIME == podman ]]; then
+    RUNTIME_ARGS+=(--userns=keep-id)
+    IDENTITY_ARGS=()
+fi
 
 usage() {
     cat <<'EOF'
 Usage: ./tools/sdk COMMAND [ARG]
 
-Commands: doctor bootstrap config config-local package NAME image shell test
+Commands: doctor bootstrap config config-local package NAME image shell test qualify
 EOF
 }
 
@@ -54,18 +60,18 @@ ensure_image() {
 docker_make() {
     ensure_dirs
     ensure_image
-    "$RUNTIME" run -t --init --rm \
+    "$RUNTIME" run "${RUNTIME_ARGS[@]}" -t --init --rm \
         -v "$BATOCERA_DIR:/build:ro" \
         -v "$ROOT:/deck-ux:ro" \
         -v "$OUTPUT_DIR:/workspace" \
         -v "$DOWNLOAD_DIR:/downloads" \
         -v "$CCACHE_DIR:/home/batocera/.buildroot-ccache" \
         -w /workspace \
-        -e "HOST_UID=$(id -u)" \
-        -e "HOST_GID=$(id -g)" \
+        "${IDENTITY_ARGS[@]}" \
         "$BATOCERA_BUILD_IMAGE" \
         make "${MAKE_ARGS[@]}" O=/workspace \
             BR2_EXTERNAL=/build:/deck-ux \
+            BR2_GLOBAL_PATCH_DIR=/deck-ux/product/patches \
             BR2_DL_DIR=/downloads \
             BR2_CCACHE_DIR=/home/batocera/.buildroot-ccache \
             -C /build/buildroot "$@"
@@ -161,7 +167,7 @@ case ${1:-} in
         require_source
         ensure_dirs
         ensure_image
-        exec "$RUNTIME" run -it --init --rm \
+        exec "$RUNTIME" run "${RUNTIME_ARGS[@]}" -it --init --rm \
             -v "$BATOCERA_DIR:/build:ro" -v "$ROOT:/deck-ux:ro" \
             -v "$OUTPUT_DIR:/workspace" -v "$DOWNLOAD_DIR:/downloads" \
             -v "$CCACHE_DIR:/home/batocera/.buildroot-ccache" \
@@ -169,6 +175,10 @@ case ${1:-} in
         ;;
     test)
         exec "$ROOT/tools/ci-check"
+        ;;
+    qualify)
+        shift
+        exec "$ROOT/tools/qualify-source" run "$@"
         ;;
     *)
         usage

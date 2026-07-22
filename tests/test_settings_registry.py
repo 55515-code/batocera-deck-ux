@@ -42,6 +42,8 @@ class SettingsRegistryTests(unittest.TestCase):
             surface for surface in self.registry["surfaces"] if surface["id"] == "developer"
         )
         self.assertTrue(developer["hidden_by_default"])
+        self.assertIn("gamer", developer["visible_in_modes"])
+        self.assertEqual("experience-modes-v1.json", self.registry["experience_policy"])
 
 
 if __name__ == "__main__":

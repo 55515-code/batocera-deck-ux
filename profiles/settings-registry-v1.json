@@ -2,6 +2,7 @@
   "schema_version": 1,
   "application": "batocera-controlcenter",
   "mode": "device-settings",
+  "experience_policy": "experience-modes-v1.json",
   "broker": {
     "api_version": 1,
     "allow_arbitrary_commands": false,
@@ -141,7 +142,8 @@
       "privileged": true,
       "disruptive": true,
       "restart": "session",
-      "hidden_by_default": true
+      "hidden_by_default": true,
+      "visible_in_modes": ["gamer", "developer"]
     }
   ]
 }

@@ -63,7 +63,9 @@ if ! launched_by_desktop_port; then
     exit 1
 fi
 
-printf '%s\n' "$$" >"$state"
+start_time=$(awk '{print $22}' "/proc/$$/stat" 2>/dev/null)
+case "$start_time" in ''|*[!0-9]*) start_time=unknown ;; esac
+printf '%s:%s\n' "$$" "$start_time" >"$state"
 log_message "starting foreground Plasma session under emulatorlauncher"
 "$session" start >>"$log" 2>&1
 session_status=$?
